@@ -12,23 +12,41 @@ class Navbar extends Component {
         changeLanguage(language);
     };
 
+   
+
     render() {
-        const { t } = this.props;
+        const {isLoggedIn, username , onLogoutSuccess, t } = this.props;
+       
+        let links = (
+            <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
+                    <Link className="nav-link" to="/login">{t('Login')}</Link>
+                </li>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/signup">{t('Sign Up')}</Link>
+                </li>
+            </ul>
+        );
+
+        if (isLoggedIn) {
+            links = (
+                <ul className="navbar-nav ml-auto">
+                    <li className="nav-item">
+                        <Link className="nav-link" to={`/user/${username}`}>{username}</Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/" onClick = {onLogoutSuccess}>{t('Logout')}</Link>
+                    </li>
+                </ul>
+            );
+        }
         return (
             <div className="bg-dark mb-3 ">
 
                 <nav className="navbar navbar-dark navbar-expand  container" >
                     <Link to="/" className="navbar-brand">App</Link>
 
-                    <ul className="navbar-nav ml-auto">
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/login">{t('Login')}</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/signup">{t('Sign Up')}</Link>
-                        </li>
-                    </ul>
-
+                    {links}
                     <div className="navbar">
 
                         <img src="https://www.countryflags.io/tr/flat/24.png" style={{ cursor: "pointer" }} onClick={() => this.onChangeLanguage("tr")} />

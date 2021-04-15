@@ -39,6 +39,7 @@ class LogInPage extends React.Component {
         
         try {
             await login(creds);
+            this.props.onLoginSuccess(username);
             push('/');
         } catch (apiError) {
             this.setState({ error: apiError.response.data.message });
