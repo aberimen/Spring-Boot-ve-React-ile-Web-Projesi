@@ -5,12 +5,13 @@ import './i18n';
 import './bootstrap-override.scss';
 import reportWebVitals from './reportWebVitals';
 import App from './container/App';
+import AuthenticationContext from './shared/AuthenticationContext';
 
 ReactDOM.render(
-  <React.StrictMode>
+  <AuthenticationContext>
     <App/>
 
-  </React.StrictMode>,
+  </AuthenticationContext>,
   document.getElementById('root')
 );
 

@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { changeLanguage } from '../api/apiCall';
-
+import { Authentication } from '../shared/AuthenticationContext';
 
 class Navbar extends Component {
+
+    static contextType = Authentication;
 
     onChangeLanguage = (language) => {
         const { i18n } = this.props;
@@ -12,11 +14,12 @@ class Navbar extends Component {
         changeLanguage(language);
     };
 
-   
-
     render() {
-        const {isLoggedIn, username , onLogoutSuccess, t } = this.props;
-       
+        const { t } = this.props;
+
+
+        const { state, onLogoutSuccess, } = this.context;
+        const { isLoggedIn, username } = state;
         let links = (
             <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
@@ -35,7 +38,7 @@ class Navbar extends Component {
                         <Link className="nav-link" to={`/user/${username}`}>{username}</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/" onClick = {onLogoutSuccess}>{t('Logout')}</Link>
+                        <Link className="nav-link" to="/" onClick={onLogoutSuccess}>{t('Logout')}</Link>
                     </li>
                 </ul>
             );
@@ -54,9 +57,9 @@ class Navbar extends Component {
                     </div>
 
                 </nav>
-
             </div>
         );
+
     }
 }
 

@@ -21,6 +21,9 @@ public class SosyalmedyaApplication {
 		return (args) ->{
 			User user = new User();
 			user.setUsername("aberimen");
+			user.setFirstName("Abdurrahman");
+			user.setLastName("Berimen");
+			user.setImage("image");
 			user.setPassword("1234");
 			
 			userService.save(user);

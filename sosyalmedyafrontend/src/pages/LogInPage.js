@@ -4,9 +4,11 @@ import ButtonWithProgress from '../components/ButtonWithProgress'
 import { login } from '../api/apiCall';
 import { withApiProgress } from "../api/ApiProgress";
 import { withTranslation } from "react-i18next";
+import { Authentication } from '../shared/AuthenticationContext';
 
 
 class LogInPage extends React.Component {
+    static contextType = Authentication;
 
     state = {
         username: null,
@@ -19,7 +21,7 @@ class LogInPage extends React.Component {
 
         this.setState({
             [name]: value,
-            error : null
+            error: null
         });
     }
 
@@ -27,34 +29,43 @@ class LogInPage extends React.Component {
         event.preventDefault();
 
         const { username, password } = this.state;
+        const { onLoginSuccess } = this.context;
 
-        this.setState({error:null});
+        this.setState({ error: null });
 
-        const {push} = this.props.history;
+        const { push } = this.props.history;
         console.log(this.props);
         const creds = {
             username,
             password
         }
-        
+
         try {
-            await login(creds);
-            this.props.onLoginSuccess(username);
+            const response = await login(creds);
+            const { username, firstName, image } = response.data;
+            const authObject = {
+                username,
+                displayName: firstName,
+                password,
+                image
+            };
+
+            onLoginSuccess(authObject);
             push('/');
         } catch (apiError) {
             this.setState({ error: apiError.response.data.message });
         }
-        
+
     }
 
     render() {
-        const {pendingApiCall} = this.props;
+        const { pendingApiCall } = this.props;
         const { error } = this.state;
-        
+
         return (
             <div className="container">
                 <form>
-                    <Input label="Username" name="username"  onChange={this.onChange} />
+                    <Input label="Username" name="username" onChange={this.onChange} />
                     <Input label="Password" name="password" type="password" onChange={this.onChange} />
                     {error && <div className="alert alert-danger" role="alert">
                         {error}
@@ -70,4 +81,4 @@ class LogInPage extends React.Component {
 
 
 const LoginPageWithTranslation = withTranslation()(LogInPage);
-export default withApiProgress(LoginPageWithTranslation,'/api/auth');
+export default withApiProgress(LoginPageWithTranslation, '/api/auth');

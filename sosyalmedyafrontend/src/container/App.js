@@ -5,46 +5,28 @@ import UserPage from "../pages/UserPage";
 import SignUpPage from "../pages/SignUpPage";
 import Navbar from "../components/Navbar";
 import LogInPage from "../pages/LogInPage";
+import { Authentication } from "../shared/AuthenticationContext";
 
 
 
 class App extends React.Component {
 
-  state = {
-    isLoggedIn: false, username: 'user'
-  };
-
-  onLoginSuccess = username => {
-    this.setState({
-      username,
-      isLoggedIn: true
-    });
-  }
-
-  onLogoutSuccess = () => {
-    this.setState({
-      username : undefined,
-      isLoggedIn: false
-    });
-  }
+  static contextType = Authentication;
 
   render() {
-    const { isLoggedIn, username } = this.state;
+    const { isLoggedIn } = this.context.state;
+
     return (
       <div>
         <Router>
-          <Navbar isLoggedIn={isLoggedIn} username={username} onLogoutSuccess = {this.onLogoutSuccess}/>
+          <Navbar />
           <Switch>
             <Route exact path="/" component={HomePage} />
             {!isLoggedIn && (
-              <Route path="/login" component={(props) => {
-                return <LogInPage {...props} onLoginSuccess={this.onLoginSuccess} />
-              }} />
+              <Route path="/login" component={LogInPage} />
             )}
             <Route path="/signup" component={SignUpPage} />
-            <Route path="/user/:username" component={props =>{
-              return <UserPage {...props} loggedInUsername = {username}/>
-            }} />
+            <Route path="/user/:username" component={UserPage} />
             <Redirect to="/" />
           </Switch>
         </Router>
