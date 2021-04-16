@@ -5,16 +5,17 @@ import UserPage from "../pages/UserPage";
 import SignUpPage from "../pages/SignUpPage";
 import Navbar from "../components/Navbar";
 import LogInPage from "../pages/LogInPage";
-import { Authentication } from "../shared/AuthenticationContext";
+//import { Authentication } from "../shared/AuthenticationContext";
+import { connect } from 'react-redux';
 
 
 
 class App extends React.Component {
 
-  static contextType = Authentication;
+  //static contextType = Authentication;
 
   render() {
-    const { isLoggedIn } = this.context.state;
+    const { isLoggedIn } = this.props;
 
     return (
       <div>
@@ -36,4 +37,8 @@ class App extends React.Component {
 
 }
 
-export default App;
+const mapStateToProps = store => {
+  return { isLoggedIn: store.isLoggedIn };
+}
+
+export default connect(mapStateToProps)(App);

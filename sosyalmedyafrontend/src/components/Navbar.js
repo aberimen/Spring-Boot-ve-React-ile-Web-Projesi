@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { changeLanguage } from '../api/apiCall';
-import { Authentication } from '../shared/AuthenticationContext';
+//import { Authentication } from '../shared/AuthenticationContext';
+import { connect } from 'react-redux';
+import { logoutSuccess } from '../redux/authActions';
+
 
 class Navbar extends Component {
 
-    static contextType = Authentication;
+    //static contextType = Authentication;
 
     onChangeLanguage = (language) => {
         const { i18n } = this.props;
@@ -14,12 +17,10 @@ class Navbar extends Component {
         changeLanguage(language);
     };
 
+
     render() {
-        const { t } = this.props;
+        const { t, isLoggedIn, username , onLogoutSuccess} = this.props;
 
-
-        const { state, onLogoutSuccess, } = this.context;
-        const { isLoggedIn, username } = state;
         let links = (
             <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
@@ -63,4 +64,19 @@ class Navbar extends Component {
     }
 }
 
-export default withTranslation()(Navbar);
+
+const mapStateToProps = (store) => {
+    const { isLoggedIn, username } = store;
+    return {
+        isLoggedIn, username
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+   return {
+       onLogoutSuccess : () => dispatch(logoutSuccess())
+   }
+}
+
+const NavbarWithTranslation = withTranslation()(Navbar);
+export default connect(mapStateToProps, mapDispatchToProps)(NavbarWithTranslation);
