@@ -1,9 +1,11 @@
 import { createStore } from 'redux';
+import SecureLS from 'secure-ls';
 import authReducer from './authReducer';
 
+const ls = new SecureLS({ encodingType: 'aes', isCompression: false });
 
-const configureStore = () => {
-    const authDataLocalStorage = localStorage.getItem('auth-data');
+const getStateFromLocalStorage = () => {
+    const authData = ls.get('auth-data');
 
     let stateInLocalStorage = {
         isLoggedIn: false,
@@ -13,16 +15,24 @@ const configureStore = () => {
         password: undefined
     };
 
-    if (authDataLocalStorage) {
-        try {
-            stateInLocalStorage = JSON.parse(authDataLocalStorage);
-        } catch (error) { }
+    if (authData) {
+        return authData;
     }
 
-    const store = createStore(authReducer, stateInLocalStorage, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+    return stateInLocalStorage;
+
+}
+
+const updateLocalStorage = newState =>{
+    ls.set('auth-data', newState);
+}
+
+const configureStore = () => {
+   
+    const store = createStore(authReducer, getStateFromLocalStorage(), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
     store.subscribe(() => {
-        localStorage.setItem('auth-data', JSON.stringify(store.getState()));
+        updateLocalStorage(store.getState());
     });
 
     return store;
