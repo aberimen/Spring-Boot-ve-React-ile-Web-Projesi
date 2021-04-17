@@ -1,12 +1,11 @@
 import React from 'react';
 import Input from '../components/Input';
 import ButtonWithProgress from '../components/ButtonWithProgress'
-import { login } from '../api/apiCall';
 import { withApiProgress } from "../api/ApiProgress";
 import { withTranslation } from "react-i18next";
 //import { Authentication } from '../shared/AuthenticationContext';
 import { connect } from 'react-redux';
-import { loginSuccess } from '../redux/authActions';
+import { loginHandler } from '../redux/authActions';
 
 
 class LogInPage extends React.Component {
@@ -43,18 +42,7 @@ class LogInPage extends React.Component {
         }
 
         try {
-            const response = await login(creds);
-            const { username, firstName, image } = response.data;
-            const authObject = {
-                username,
-                displayName: firstName,
-                password,
-                image,
-                isLoggedIn : true
-            };
-
-           // onLoginSuccess(authObject);
-           this.props.dispatch(loginSuccess(authObject));
+            const response = await this.props.dispatch(loginHandler(creds));
             push('/');
         } catch (apiError) {
             this.setState({ error: apiError.response.data.message });
@@ -82,10 +70,6 @@ class LogInPage extends React.Component {
     }
 }
 
-const mapStateToProps = store => {
-    return {store};
-}
-
 const LoginPageWithTranslation = withTranslation()(LogInPage);
 const LoginPageWithApiProgress = withApiProgress(LoginPageWithTranslation, '/api/auth');
-export default connect(mapStateToProps)(LoginPageWithApiProgress);
+export default connect()(LoginPageWithApiProgress);

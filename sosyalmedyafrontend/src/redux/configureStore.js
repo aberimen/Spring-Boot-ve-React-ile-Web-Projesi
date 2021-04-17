@@ -1,4 +1,5 @@
-import { createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
+import thunk from 'redux-thunk';
 import SecureLS from 'secure-ls';
 import authReducer from './authReducer';
 
@@ -29,7 +30,7 @@ const updateLocalStorage = newState =>{
 
 const configureStore = () => {
    
-    const store = createStore(authReducer, getStateFromLocalStorage(), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+    const store = createStore(authReducer, getStateFromLocalStorage(),applyMiddleware(thunk));
 
     store.subscribe(() => {
         updateLocalStorage(store.getState());
