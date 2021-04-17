@@ -1,8 +1,10 @@
 import React from "react";
-import { signup} from "../api/apiCall";
+import { signup } from "../api/apiCall";
 import { withTranslation } from "react-i18next";
 import Input from "../components/Input";
 import { withApiProgress } from "../api/ApiProgress";
+import { connect } from "react-redux";
+import { signupHandler } from "../redux/authActions";
 
 class SignUpPage extends React.Component {
   state = {
@@ -34,17 +36,20 @@ class SignUpPage extends React.Component {
     event.preventDefault();
 
     const { username, firstName, lastName, password } = this.state;
+    const { push } = this.props.history;
 
     const user = { username, firstName, lastName, password }; // k,v aynı olduğu için
 
     try {
-      const response = await signup(user);
+      const response = await this.props.dispatch(signupHandler(user));
+      push('/');
     } catch (error) {
-      if (error.response.data.validationError) this.setState({ apiErrors: error.response.data.validationError });
+      if (error.response.data.validationError)
+        this.setState({ apiErrors: error.response.data.validationError });
     }
   };
 
- 
+
 
   render() {
     const { pendingApiCall } = this.props;
@@ -71,12 +76,13 @@ class SignUpPage extends React.Component {
             </button>
           </div>
         </form>
-        
+
       </div>
     );
   }
 }
 
-const SignUpPageWithTranslations = withTranslation()(SignUpPage);
-const SignUpPageWithApiProgress = withApiProgress(SignUpPageWithTranslations,'/api/users');
-export default SignUpPageWithApiProgress;
+const SignUpPageWithApiProgressForSignUp = withApiProgress(SignUpPage, '/api/users');
+const SignUpPageWithApiProgressForAuth = withApiProgress(SignUpPageWithApiProgressForSignUp, '/api/auth');
+const SignUpPageWithTranslations = withTranslation()(SignUpPageWithApiProgressForAuth);
+export default connect()(SignUpPageWithTranslations);
