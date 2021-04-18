@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { signup } from "../api/apiCall";
 import { withTranslation } from "react-i18next";
 import Input from "../components/Input";
@@ -6,8 +6,9 @@ import { withApiProgress } from "../api/ApiProgress";
 import { connect } from "react-redux";
 import { signupHandler } from "../redux/authActions";
 
-class SignUpPage extends React.Component {
-  state = {
+const SignUpPage = props => {
+
+  const [formObj, setFormObj] = useState({
     username: null,
     firstName: null,
     lastName: null,
@@ -15,71 +16,65 @@ class SignUpPage extends React.Component {
     confirmPassword: null,
     pendingApiCall: false,
     apiErrors: {},
-  };
+  });
 
-  //  onChangeUsername = (event)=>{
-  //         this.setState({username:event.target.value})
-  //     }
-  // böyle her field için tek tek yapmaktansa aşağıdaki metod daha kısa çözüm
 
-  onChange = (event) => {
+  const onChange = (event) => {
     const { name, value } = event.target; //object destructuring
-    const errors = { ...this.state.apiErrors };
-    errors[name] = null;
-    this.setState({
+    const errors = { ...formObj.apiErrors };
+    errors[name] = undefined;
+    setFormObj({
+      ...formObj,
       [name]: value,
       apiErrors: errors,
     });
   };
 
-  onClickSignUp = async (event) => {
+  const onClickSignUp = async (event) => {
     event.preventDefault();
 
-    const { username, firstName, lastName, password } = this.state;
-    const { push } = this.props.history;
-
+    const { push } = props.history;
+    const { username, firstName, lastName, password } = formObj;
     const user = { username, firstName, lastName, password }; // k,v aynı olduğu için
 
     try {
-      const response = await this.props.dispatch(signupHandler(user));
+      const response = await props.dispatch(signupHandler(user));
       push('/');
     } catch (error) {
-      if (error.response.data.validationError)
-        this.setState({ apiErrors: error.response.data.validationError });
+      if (error.response.data.validationError) {
+      setFormObj({ ...formObj, apiErrors: error.response.data.validationError });
+      }
     }
   };
 
 
+  const { pendingApiCall } = props;
+ 
+  const { t } = props;
+  return (
+    <div className="container">
+      <form>
+        <Input error={formObj.apiErrors.username} label={t("Username")} name="username" onChange={e => onChange(e)} />
 
-  render() {
-    const { pendingApiCall } = this.props;
-    const { apiErrors } = this.state;
-    const { username, firstName, lastName, password } = apiErrors;
-    const { t } = this.props;
-    return (
-      <div className="container">
-        <form>
-          <Input error={username} label={t("Username")} name="username" onChange={this.onChange} />
+        <Input error={formObj.apiErrors.firstName} label={t("First Name")} name="firstName" onChange={e => onChange(e)} />
 
-          <Input error={firstName} label={t("First Name")} name="firstName" onChange={this.onChange} />
+        <Input error={formObj.apiErrors.lastName} label={t("Last Name")} name="lastName" onChange={e => onChange(e)} />
 
-          <Input error={lastName} label={t("Last Name")} name="lastName" onChange={this.onChange} />
+        <Input error={formObj.apiErrors.password} label={t("Password")} name="password" type="password" onChange={e => onChange(e)} />
 
-          <Input error={password} label={t("Password")} name="password" type="password" onChange={this.onChange} />
+        <Input error={false} label="Confirm Password" name="confirmpassword" type="password" onChange={e => onChange(e)} />
 
-          <Input error={false} label="Confirm Password" name="confirmpassword" type="password" onChange={this.onChange} />
+        <div>
+          <button className="btn btn-primary" disabled={pendingApiCall} onClick={onClickSignUp}>
+            {pendingApiCall && <span className="spinner-border spinner-border-sm"></span>}
+            Sign Up
+          </button>
+        </div>
+      </form>
 
-          <div>
-            <button className="btn btn-primary" disabled={pendingApiCall} onClick={this.onClickSignUp}>
-              {pendingApiCall && <span className="spinner-border spinner-border-sm"></span>}
-              Sign Up
-            </button>
-          </div>
-        </form>
+    </div>
+  );
 
-      </div>
-    );
-  }
 }
 
 const SignUpPageWithApiProgressForSignUp = withApiProgress(SignUpPage, '/api/users');
