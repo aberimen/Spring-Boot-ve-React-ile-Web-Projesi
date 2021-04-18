@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { signup } from "../api/apiCall";
-import { withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import Input from "../components/Input";
 import { withApiProgress } from "../api/ApiProgress";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { signupHandler } from "../redux/authActions";
 
 const SignUpPage = props => {
+
+  const { t } = useTranslation();
+
+  const dispatch = useDispatch();
 
   const [formObj, setFormObj] = useState({
     username: null,
@@ -38,19 +41,18 @@ const SignUpPage = props => {
     const user = { username, firstName, lastName, password }; // k,v aynı olduğu için
 
     try {
-      const response = await props.dispatch(signupHandler(user));
+      const response = await dispatch(signupHandler(user));
       push('/');
     } catch (error) {
       if (error.response.data.validationError) {
-      setFormObj({ ...formObj, apiErrors: error.response.data.validationError });
+        setFormObj({ ...formObj, apiErrors: error.response.data.validationError });
       }
     }
   };
 
 
   const { pendingApiCall } = props;
- 
-  const { t } = props;
+
   return (
     <div className="container">
       <form>
@@ -78,6 +80,4 @@ const SignUpPage = props => {
 }
 
 const SignUpPageWithApiProgressForSignUp = withApiProgress(SignUpPage, '/api/users');
-const SignUpPageWithApiProgressForAuth = withApiProgress(SignUpPageWithApiProgressForSignUp, '/api/auth');
-const SignUpPageWithTranslations = withTranslation()(SignUpPageWithApiProgressForAuth);
-export default connect()(SignUpPageWithTranslations);
+export default withApiProgress(SignUpPageWithApiProgressForSignUp, '/api/auth');

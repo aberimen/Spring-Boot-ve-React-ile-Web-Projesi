@@ -5,40 +5,34 @@ import UserPage from "../pages/UserPage";
 import SignUpPage from "../pages/SignUpPage";
 import Navbar from "../components/Navbar";
 import LogInPage from "../pages/LogInPage";
-//import { Authentication } from "../shared/AuthenticationContext";
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 
 
-class App extends React.Component {
+const App = props => {
 
-  //static contextType = Authentication;
+  const { isLoggedIn } = useSelector((store) => { //isLoggedIn bilgisini hook kullanarak redux storeden alıyoruz
+    return { isLoggedIn: store.isLoggedIn };
+  });
 
-  render() {
-    const { isLoggedIn } = this.props;
 
-    return (
-      <div>
-        <Router>
-          <Navbar />
-          <Switch>
-            <Route exact path="/" component={HomePage} />
-            {!isLoggedIn && (
-              <Route path="/login" component={LogInPage} />
-            )}
-            <Route path="/signup" component={SignUpPage} />
-            <Route path="/user/:username" component={UserPage} />
-            <Redirect to="/" />
-          </Switch>
-        </Router>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <Router>
+        <Navbar />
+        <Switch>
+          <Route exact path="/" component={HomePage} />
+          {!isLoggedIn && (
+            <Route path="/login" component={LogInPage} />
+          )}
+          <Route path="/signup" component={SignUpPage} />
+          <Route path="/user/:username" component={UserPage} />
+          <Redirect to="/" />
+        </Switch>
+      </Router>
+    </div>
+  );
 
 }
 
-const mapStateToProps = store => {
-  return { isLoggedIn: store.isLoggedIn };
-}
-
-export default connect(mapStateToProps)(App);
+export default App;
