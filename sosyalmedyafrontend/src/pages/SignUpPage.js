@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Input from "../components/Input";
-import { withApiProgress } from "../api/ApiProgress";
+import { useApiProgress, withApiProgress } from "../api/ApiProgress";
 import { useDispatch } from "react-redux";
 import { signupHandler } from "../redux/authActions";
 
@@ -51,7 +51,10 @@ const SignUpPage = props => {
   };
 
 
-  const { pendingApiCall } = props;
+  const pendingApiCallSignup = useApiProgress('/api/users');
+  const pendingApiCallLogin = useApiProgress('/api/auth');
+
+  const pendingApiCall = pendingApiCallSignup || pendingApiCallLogin;
 
   return (
     <div className="container">
@@ -79,5 +82,5 @@ const SignUpPage = props => {
 
 }
 
-const SignUpPageWithApiProgressForSignUp = withApiProgress(SignUpPage, '/api/users');
-export default withApiProgress(SignUpPageWithApiProgressForSignUp, '/api/auth');
+
+export default SignUpPage;
