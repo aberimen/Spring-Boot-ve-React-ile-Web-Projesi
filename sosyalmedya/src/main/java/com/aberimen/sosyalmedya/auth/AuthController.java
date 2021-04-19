@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aberimen.sosyalmedya.security.MyUserDetails;
-import com.aberimen.sosyalmedya.shared.View;
 import com.aberimen.sosyalmedya.user.User;
 import com.aberimen.sosyalmedya.user.UserRepository;
-import com.fasterxml.jackson.annotation.JsonView;
 
 @RestController
 public class AuthController {
@@ -23,7 +21,6 @@ public class AuthController {
 	BCryptPasswordEncoder bEncoder = new BCryptPasswordEncoder();
 
 	@PostMapping("/api/auth")
-	@JsonView(View.Base.class)
 	public ResponseEntity<?> auth() {
 		
 		MyUserDetails userDetails= (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

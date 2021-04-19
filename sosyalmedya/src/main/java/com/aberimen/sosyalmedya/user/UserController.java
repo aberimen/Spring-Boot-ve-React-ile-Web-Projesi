@@ -1,7 +1,5 @@
 package com.aberimen.sosyalmedya.user;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aberimen.sosyalmedya.shared.GenericResponse;
-import com.aberimen.sosyalmedya.shared.View;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.aberimen.sosyalmedya.user.vm.UserVM;
 
 @RestController
 public class UserController {
@@ -33,10 +29,9 @@ public class UserController {
 	}
 
 	@GetMapping("/api/users")
-	//@JsonView(View.Base.class)
-	public Page<Projection> getUsers(Pageable pageable) {
+	public Page<UserVM> getUsers(Pageable pageable) {
 		
-		return userService.getUsers(pageable);
+		return userService.getUsers(pageable).map(UserVM::new);
 	}
 
 }
