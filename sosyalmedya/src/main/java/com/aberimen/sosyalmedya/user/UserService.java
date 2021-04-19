@@ -2,6 +2,9 @@ package com.aberimen.sosyalmedya.user;
 
 import java.util.List;
 
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,9 +27,11 @@ public class UserService {
 		userRepository.save(user);
 	}
 
-	public List<User> getUsers() {
+	public Page<User> getUsers(Pageable pageable) {
+		 //PageRequest pageble =PageRequest.of(page, limit);
+		 
+		return userRepository.findAll(pageable);
 
-		return userRepository.findAll();
 	}
 
 }

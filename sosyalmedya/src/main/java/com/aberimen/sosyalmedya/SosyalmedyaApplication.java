@@ -19,14 +19,18 @@ public class SosyalmedyaApplication {
 	@Bean
 	CommandLineRunner initUser(UserService userService){
 		return (args) ->{
-			User user = new User();
-			user.setUsername("aberimen");
-			user.setFirstName("Abdurrahman");
-			user.setLastName("Berimen");
-			user.setImage("image");
-			user.setPassword("1234");
+			for (int i = 1; i <25; i++) {
+				User user = new User();
+				user.setUsername("aberimen"+i);
+				user.setFirstName("Abdurrahman");
+				user.setLastName("Berimen");
+				user.setImage("image");
+				user.setPassword("1234");
+				
+				userService.save(user);
+				
+			}
 			
-			userService.save(user);
 		};
 		
 	}
