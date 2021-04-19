@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { getUsers } from '../api/apiCall';
+import UserListItem from './UserListItem';
 
 class UserList extends Component {
 
@@ -7,42 +8,20 @@ class UserList extends Component {
 
     componentDidMount() {
         getUsers().then(response => {
-            this.setState({ users: response.data });
+            this.setState({ users: response.data.content });
         })
     }
     render() {
         const { users } = this.state;
         return (
             <div>
-                <table className="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Username</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                
+                <div className="list-group list-group-flush">
+                    {users.map((user) => {
+                        return <UserListItem user={user} key={user.username} />
+                    })}
 
-                        {users.map((user, index) => {
-                            return (
-                                <tr>
-                                    <th scope="row">{index + 1}</th>
-                                    <td>{user.username}</td>
-                                    <td>{user.firstName}</td>
-                                    <td>{user.lastName}</td>
-                                </tr>)
-                        }
-
-                        )}
-
-
-                    </tbody>
-
-
-
-                </table>
+                </div>
             </div>
         );
     }
