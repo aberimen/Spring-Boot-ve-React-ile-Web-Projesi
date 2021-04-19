@@ -4,25 +4,56 @@ import UserListItem from './UserListItem';
 
 class UserList extends Component {
 
-    state = { users: [] };
+    state = {
+        page: {
+            content: [],
+            number: 0,
+            limit: 5
+        }
+    };
 
     componentDidMount() {
-        getUsers().then(response => {
-            this.setState({ users: response.data.content });
-        })
+        this.loadUserPage(this.state.page.number);
+
     }
+    loadUserPage(page) {
+        getUsers(page).then(response => {
+            this.setState({ page: response.data });
+        });
+
+    }
+
     render() {
-        const { users } = this.state;
+        const { content: users, number, last, first } = this.state.page;
         return (
             <div>
-                
-                <div className="list-group list-group-flush">
-                    {users.map((user) => {
-                        return <UserListItem user={user} key={user.username} />
-                    })}
+                <div className="card" style={{ height: "450px" }}>
+                    <div class="card-body">
+                        <h5 class="card-title">Kullanıcılar</h5>
+                        <div className="list-group list-group-flush p-3">
+                            {users.map((user) => {
+                                return <UserListItem user={user} key={user.username} />
+                            })}
 
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-3">
+                    <ul className="pagination justify-content-center">
+                        <li className={`page-item ${first == true && "disabled"}`}>
+                            <button className="page-link shadow-none" onClick={() => this.loadUserPage(number - 1)}>Previous</button>
+                        </li>
+                        <li className="page item">
+                            <div className="page-link" >{number + 1}</div>
+                        </li>
+                        <li className={`page-item ${last == true && "disabled"}`}>
+                            <button className="page-link shadow-none" onClick={() => this.loadUserPage(number + 1)}>Next</button>
+                        </li>
+                    </ul>
                 </div>
             </div>
+
         );
     }
 }
