@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -33,6 +34,13 @@ public class UserController {
 	public Page<UserVM> getUsers(Pageable pageable, @CurrentUser User user) {
 
 		return userService.getUsers(pageable, user).map(UserVM::new);
+	}
+
+	@GetMapping("api/users/{username}")
+	public UserVM getByUsername(@PathVariable String username) {
+		User user = userService.getByUsername(username);
+		
+		return new UserVM(user);
 	}
 
 }

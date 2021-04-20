@@ -6,6 +6,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.aberimen.sosyalmedya.api.NotFoundException;
+
 @Service
 public class UserService {
 
@@ -31,6 +33,15 @@ public class UserService {
 			return userRepository.findByUsernameNot(user.getUsername(), pageable);
 		}
 		return userRepository.findAll(pageable);
+	}
+
+	public User getByUsername(String username) {
+		User user = userRepository.findByUsername(username);
+		if(user == null) {
+			throw new NotFoundException();
+		}
+		
+		return user;
 	}
 
 }
