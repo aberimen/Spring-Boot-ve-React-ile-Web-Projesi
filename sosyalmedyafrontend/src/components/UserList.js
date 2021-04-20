@@ -8,7 +8,9 @@ const UserList = props => {
         page: {
             content: [],
             number: 0,
-            limit: 5
+            limit: 5,
+            first :true,
+            last:true
         }
     });
 
@@ -27,8 +29,8 @@ const UserList = props => {
     return (
         <div>
             <div className="card" style={{ height: "450px" }}>
-                <div class="card-body">
-                    <h5 class="card-title">Kullanıcılar</h5>
+                <div className="card-body">
+                    <h5 className="card-title">Kullanıcılar</h5>
                     <div className="list-group list-group-flush p-3">
                         {users.map((user) => {
                             return <UserListItem user={user} key={user.username} />

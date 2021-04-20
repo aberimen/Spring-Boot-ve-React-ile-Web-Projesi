@@ -1,9 +1,12 @@
 package com.aberimen.sosyalmedya.user.vm;
 
 import com.aberimen.sosyalmedya.user.User;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class UserVM {
 
 	private String username;
