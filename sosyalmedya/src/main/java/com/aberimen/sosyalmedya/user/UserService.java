@@ -24,11 +24,13 @@ public class UserService {
 		userRepository.save(user);
 	}
 
-	public Page<User> getUsers(Pageable pageable) {
-		 //PageRequest pageble =PageRequest.of(page, limit);
-		 
+	public Page<User> getUsers(Pageable pageable, User user) {
+		// PageRequest pageble =PageRequest.of(page, limit);
+		System.out.println(user);
+		if (user != null) {
+			return userRepository.findByUsernameNot(user.getUsername(), pageable);
+		}
 		return userRepository.findAll(pageable);
-
 	}
 
 }

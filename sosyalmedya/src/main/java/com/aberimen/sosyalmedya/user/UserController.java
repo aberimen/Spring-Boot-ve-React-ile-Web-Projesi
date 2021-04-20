@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aberimen.sosyalmedya.shared.CurrentUser;
 import com.aberimen.sosyalmedya.shared.GenericResponse;
 import com.aberimen.sosyalmedya.user.vm.UserVM;
 
@@ -29,9 +30,9 @@ public class UserController {
 	}
 
 	@GetMapping("/api/users")
-	public Page<UserVM> getUsers(Pageable pageable) {
-		
-		return userService.getUsers(pageable).map(UserVM::new);
+	public Page<UserVM> getUsers(Pageable pageable, @CurrentUser User user) {
+
+		return userService.getUsers(pageable, user).map(UserVM::new);
 	}
 
 }
