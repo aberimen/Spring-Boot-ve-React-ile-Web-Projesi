@@ -9,7 +9,7 @@ export const useApiProgress = (apiPath) => {
         let requestInterceptor, responseInterceptor;
 
         const checkPath = (url, isProgress) => {
-            if (url === apiPath) {
+            if (url.startsWith(apiPath)) {
                 setPendingApiCall(isProgress);
             }
         };

@@ -1,45 +1,72 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers } from '../api/apiCall';
+import { useApiProgress } from '../api/ApiProgress';
 import UserListItem from './UserListItem';
 
 const UserList = props => {
 
+    const [loadFailure, setLoadFailure] = useState(false);
     const [usersState, setUsersState] = useState({
         page: {
             content: [],
             number: 0,
             limit: 5,
-            first :true,
-            last:true
+            first: true,
+            last: true
         }
     });
 
+    const pendingApiCall = useApiProgress("/api/users?page");
+
     useEffect(() => {
         loadUsers();
-    },[]);
+    }, []);
 
-    const loadUsers = page => {
-        getUsers(page).then(response => {
+    const loadUsers = async page => {
+        setLoadFailure(false);
+        try {
+            const response = await getUsers(page);
             setUsersState({ ...useState, page: response.data });
-        });
-
+        } catch (error) {
+            setLoadFailure(true);
+        }
     }
 
     const { content: users, number, last, first } = usersState.page;
-    return (
-        <div>
-            <div className="card" style={{ height: "450px" }}>
-                <div className="card-body">
-                    <h5 className="card-title">Kullanıcılar</h5>
-                    <div className="list-group list-group-flush p-3">
-                        {users.map((user) => {
-                            return <UserListItem user={user} key={user.username} />
-                        })}
 
+    const usersContent = () => {
+        if (pendingApiCall) {
+            return (
+                <div className=" d-flex justify-content-center w-100 h-100 align-items-center">
+                    <div className="spinner-border text-secondary" style={{ width: "3rem", height: "3rem" }} role="status">
+                        <span className="sr-only">Loading...</span>
                     </div>
                 </div>
-            </div>
+            );
+        }
+        return (
+            <>
+                <h5 className="card-title">Kullanıcılar</h5>
+                <div className="list-group list-group-flush p-3">
+                    {users.map((user) => {
+                        return <UserListItem user={user} key={user.username} />
+                    })}
 
+                </div>
+            </>
+        );
+
+    };
+    return (
+        <div>
+
+
+            <div className="card" style={{ height: "450px" }}>
+                <div className="card-body">
+                    {usersContent()}
+                </div>
+            </div>
+            { loadFailure && (<div class="alert alert-danger mt-3" role="alert"> Kullanıcılar Yüklenemedi...</div>)}
             <div className="mt-3">
                 <ul className="pagination justify-content-center">
                     <li className={`page-item ${first == true && "disabled"}`}>
@@ -53,8 +80,10 @@ const UserList = props => {
                     </li>
                 </ul>
             </div>
-        </div>
 
+
+
+        </div>
     );
 }
 
