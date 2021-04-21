@@ -20,10 +20,14 @@ export const getUsers = (page = 0, limit = 5) => {
 export const setAuthorizatonHeader = ({ username, password, isLoggedIn }) => {
     if (isLoggedIn) {
         axios.defaults.headers['Authorization'] = btoa(`${username}:${password}`);
-        console.log("loginken: "+axios.defaults.headers['Authorization']);
+        console.log("loginken: " + axios.defaults.headers['Authorization']);
     }
     else {
         delete axios.defaults.headers['Authorization'];
         console.log(axios.defaults.headers['Authorization']);
     }
 };
+
+export const getUserByUsername = (username) => {
+    return axios.get(`/api/users/${username}`);
+}

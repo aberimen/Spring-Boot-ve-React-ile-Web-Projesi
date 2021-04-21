@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers } from '../api/apiCall';
 import { useApiProgress } from '../api/ApiProgress';
+import Spinner from './Spinner';
 import UserListItem from './UserListItem';
 
 const UserList = props => {
@@ -37,11 +38,7 @@ const UserList = props => {
     const usersContent = () => {
         if (pendingApiCall) {
             return (
-                <div className=" d-flex justify-content-center w-100 h-100 align-items-center">
-                    <div className="spinner-border text-secondary" style={{ width: "3rem", height: "3rem" }} role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                </div>
+                <Spinner />
             );
         }
         return (
