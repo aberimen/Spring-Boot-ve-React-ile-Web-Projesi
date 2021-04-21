@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.aberimen.sosyalmedya.api.NotFoundException;
+import com.aberimen.sosyalmedya.user.vm.UpdatedUserVM;
 
 @Service
 public class UserService {
@@ -37,11 +38,19 @@ public class UserService {
 
 	public User getByUsername(String username) {
 		User user = userRepository.findByUsername(username);
-		if(user == null) {
+		if (user == null) {
 			throw new NotFoundException();
 		}
-		
+
 		return user;
+	}
+
+	public User updateFullName(String username, UpdatedUserVM user) {
+		User userInDB = getByUsername(username);
+		userInDB.setFirstName(user.getFirstName());
+		userInDB.setLastName(user.getLastName());
+
+		return userRepository.save(userInDB);
 	}
 
 }
