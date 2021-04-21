@@ -40,11 +40,7 @@ const ProfileCard = props => {
     });
 
     const pathUsername = routerParams.username;
-    let message = " You cannot edit";
-
-    if (pathUsername === loggedInUsername) {
-        message = "You can edit";
-    }
+    const editable = pathUsername === loggedInUsername;
 
 
 
@@ -72,8 +68,10 @@ const ProfileCard = props => {
                 <div className="card-body">
                     <h5 className="card-title font-weight-bold">{"@" + username}</h5>
                     {!inEditMode &&
-                        (<><p className="card-text">{firstName + " " + lastName}</p>
-                            <button className="btn btn-primary" onClick={() => setInEditMode(true)}>Düzenle</button> </>)
+                        <>
+                            <p className="card-text">{firstName + " " + lastName}</p>
+                            {editable && <button className="btn btn-primary" onClick={() => setInEditMode(true)}>Düzenle</button>}
+                        </>
                     }
                     {inEditMode && (
                         <div className="mt-4">
