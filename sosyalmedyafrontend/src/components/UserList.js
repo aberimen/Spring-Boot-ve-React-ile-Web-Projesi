@@ -17,7 +17,7 @@ const UserList = props => {
         }
     });
 
-    const pendingApiCall = useApiProgress("/api/users?page");
+    const pendingApiCall = useApiProgress('get', '/api/users?page');
 
     useEffect(() => {
         loadUsers();

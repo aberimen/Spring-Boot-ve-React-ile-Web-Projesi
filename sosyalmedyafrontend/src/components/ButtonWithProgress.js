@@ -1,9 +1,9 @@
 
 const ButtonWithProgress = (props) => {
-    const {disabled,onClick , pendingApiCall} = props;
+    const { disabled, onClick, pendingApiCall, text, className } = props;
     return (
-        <button className="btn btn-primary" disabled={disabled} onClick={onClick} >
-            {pendingApiCall && <span className="spinner-border spinner-border-sm"></span>} Login
+        <button className={className || "btn btn-primary"} disabled={disabled} onClick={onClick} >
+            {pendingApiCall && <span className="spinner-border spinner-border-sm"></span>} {text}
         </button>
     );
 

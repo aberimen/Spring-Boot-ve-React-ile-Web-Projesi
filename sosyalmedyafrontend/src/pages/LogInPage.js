@@ -27,7 +27,7 @@ const LogInPage = props => {
         setError(undefined);
 
         const { push } = props.history;
-     
+
         const creds = {
             username,
             password
@@ -42,7 +42,7 @@ const LogInPage = props => {
 
     }
 
-    const pendingApiCall  = useApiProgress('/api/auth');
+    const pendingApiCall = useApiProgress('post', '/api/auth');
 
     return (
         <div className="container">
@@ -52,7 +52,7 @@ const LogInPage = props => {
                 {error && <div className="alert alert-danger" role="alert">
                     {error}
                 </div>}
-                <ButtonWithProgress pendingApiCall={pendingApiCall} disabled={pendingApiCall} onClick={onClickLogin}></ButtonWithProgress>
+                <ButtonWithProgress pendingApiCall={pendingApiCall} disabled={pendingApiCall} onClick={onClickLogin} text="Login" />
             </form>
         </div>
 

@@ -51,8 +51,8 @@ const SignUpPage = props => {
   };
 
 
-  const pendingApiCallSignup = useApiProgress('/api/users');
-  const pendingApiCallLogin = useApiProgress('/api/auth');
+  const pendingApiCallSignup = useApiProgress('post', '/api/users');
+  const pendingApiCallLogin = useApiProgress('post', '/api/auth');
 
   const pendingApiCall = pendingApiCallSignup || pendingApiCallLogin;
 

@@ -4,6 +4,10 @@ import { useParams } from 'react-router';
 import { useSelector } from 'react-redux';
 import ProfileImage from './ProfileImage';
 import Input from './Input';
+import { updateUser } from '../api/apiCall';
+import ButtonWithProgress from './ButtonWithProgress';
+import { useApiProgress } from '../api/ApiProgress';
+
 const ProfileCard = props => {
 
     const routerParams = useParams();
@@ -12,14 +16,21 @@ const ProfileCard = props => {
 
     const [updatedData, setUpdatedData] = useState();
 
-    const { user } = props;
-    const { username, firstName, lastName } = user;
+    const [user, setUser] = useState({});
+
+
+    useEffect(() => {
+        setUser(props.user);
+
+    }, [props.user]);
+
+    let { username, firstName, lastName } = user;
 
     useEffect(() => {
         if (!inEditMode) {
             setUpdatedData(undefined);
         } else {
-            setUpdatedData({firstName,lastName});
+            setUpdatedData({ firstName, lastName });
         }
 
     }, [inEditMode]);
@@ -35,12 +46,20 @@ const ProfileCard = props => {
         message = "You can edit";
     }
 
-    const onClickSave = () => {
-        //setUpdatedName(event.target.value);
+
+
+    const onClickSave = async () => {
         console.log(updatedData);
-    }
+        try {
+            const response = await updateUser(username, updatedData);
+            setUser(response.data);
+            setInEditMode(false);
+        } catch (error) {
 
+        }
+    };
 
+    const pendingApiCall = useApiProgress('put', '/api/users/' + username);
 
     return (
         <div>
@@ -58,10 +77,10 @@ const ProfileCard = props => {
                     }
                     {inEditMode && (
                         <div className="mt-4">
-                            <Input label="First Name " defaultValue={firstName} onChange={(event) => setUpdatedData({...updatedData,firstName:event.target.value})} />
-                            <Input label="Last Name " defaultValue={lastName} onChange={(event) => setUpdatedData({...updatedData,lastName:event.target.value})} />
-                            <button className="btn btn-success" onClick={() => onClickSave()}>Save</button>
-                            <button className="btn btn-danger ml-2" onClick={() => setInEditMode(false)}>Cancel</button>
+                            <Input label="First Name " defaultValue={firstName} onChange={(event) => setUpdatedData({ ...updatedData, firstName: event.target.value })} />
+                            <Input label="Last Name " defaultValue={lastName} onChange={(event) => setUpdatedData({ ...updatedData, lastName: event.target.value })} />
+                            <ButtonWithProgress className="btn btn-success" text="Save" disabled={pendingApiCall} onClick={() => onClickSave()} pendingApiCall={pendingApiCall} />
+                            <button className="btn btn-danger ml-2" onClick={() => setInEditMode(false)} disabled={pendingApiCall}>Cancel</button>
                         </div>
                     )}
                 </div>
