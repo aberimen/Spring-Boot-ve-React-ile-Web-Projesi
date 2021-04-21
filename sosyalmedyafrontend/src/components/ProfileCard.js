@@ -11,12 +11,24 @@ import { useApiProgress } from '../api/ApiProgress';
 const ProfileCard = props => {
 
     const routerParams = useParams();
+    const pathUsername = routerParams.username;
 
     const [inEditMode, setInEditMode] = useState(false);
 
     const [updatedData, setUpdatedData] = useState();
 
     const [user, setUser] = useState({});
+
+    const [editable, setEditable] = useState(false);
+
+    const { loggedInUsername } = useSelector(store => {
+        return { loggedInUsername: store.username };
+    });
+
+    useEffect(() => {
+        setEditable(pathUsername === loggedInUsername);
+
+    }, [pathUsername, loggedInUsername]);
 
 
     useEffect(() => {
@@ -35,12 +47,7 @@ const ProfileCard = props => {
 
     }, [inEditMode]);
 
-    const { loggedInUsername } = useSelector(store => {
-        return { loggedInUsername: store.username };
-    });
 
-    const pathUsername = routerParams.username;
-    const editable = pathUsername === loggedInUsername;
 
 
 
