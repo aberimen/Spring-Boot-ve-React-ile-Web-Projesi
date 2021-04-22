@@ -50,6 +50,10 @@ public class UserService {
 		userInDB.setFirstName(user.getFirstName());
 		userInDB.setLastName(user.getLastName());
 
+		if (user.getImage() != null) {
+			userInDB.setImage(user.getImage());
+		}
+
 		return userRepository.save(userInDB);
 	}
 

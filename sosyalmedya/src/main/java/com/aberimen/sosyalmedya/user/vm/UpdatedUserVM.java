@@ -4,7 +4,10 @@ import lombok.Data;
 
 @Data
 public class UpdatedUserVM {
-	
+
 	private String firstName;
+
 	private String lastName;
+
+	private String image;
 }

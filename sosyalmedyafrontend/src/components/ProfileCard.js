@@ -15,11 +15,13 @@ const ProfileCard = props => {
 
     const [inEditMode, setInEditMode] = useState(false);
 
-    const [updatedData, setUpdatedData] = useState();
+    const [updatedData, setUpdatedData] = useState({});
 
     const [user, setUser] = useState({});
 
     const [editable, setEditable] = useState(false);
+
+    const [newImage, setNewImage] = useState();
 
     const { loggedInUsername } = useSelector(store => {
         return { loggedInUsername: store.username };
@@ -36,11 +38,12 @@ const ProfileCard = props => {
 
     }, [props.user]);
 
-    let { username, firstName, lastName } = user;
+    const { username, firstName, lastName } = user;
 
     useEffect(() => {
         if (!inEditMode) {
-            setUpdatedData(undefined);
+            setUpdatedData({});
+            setNewImage(undefined);
         } else {
             setUpdatedData({ firstName, lastName });
         }
@@ -48,13 +51,22 @@ const ProfileCard = props => {
     }, [inEditMode]);
 
 
-
-
+    const onChangeFile = (event) => {
+        const file = event.target.files[0];
+        const fileReader = new FileReader();
+        fileReader.onloadend = () => {
+            setNewImage(fileReader.result);
+        };
+        fileReader.readAsDataURL(file);
+    };
 
     const onClickSave = async () => {
-        console.log(updatedData);
+        const body = {
+            ...updatedData, image: newImage
+        };
+        console.log(body);
         try {
-            const response = await updateUser(username, updatedData);
+            const response = await updateUser(username, body);
             setUser(response.data);
             setInEditMode(false);
         } catch (error) {
@@ -69,7 +81,7 @@ const ProfileCard = props => {
 
             <div className="card" style={{ width: "75%" }}>
                 <div className="card-header text-center">
-                    <ProfileImage className="text-center" style={{ width: "25%" }} user={user} />
+                    <ProfileImage className="text-center rounded-circle" style={{ width: "150px", height: "150px" }} user={user} newImage={newImage} />
                 </div>
 
                 <div className="card-body">
@@ -82,6 +94,7 @@ const ProfileCard = props => {
                     }
                     {inEditMode && (
                         <div className="mt-4">
+                            <input type="file" className="form-control-file mb-3" onChange={event => onChangeFile(event)} />
                             <Input label="First Name " defaultValue={firstName} onChange={(event) => setUpdatedData({ ...updatedData, firstName: event.target.value })} />
                             <Input label="Last Name " defaultValue={lastName} onChange={(event) => setUpdatedData({ ...updatedData, lastName: event.target.value })} />
                             <ButtonWithProgress className="btn btn-success" text="Save" disabled={pendingApiCall} onClick={() => onClickSave()} pendingApiCall={pendingApiCall} />
