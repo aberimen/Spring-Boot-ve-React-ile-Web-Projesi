@@ -52,6 +52,9 @@ const ProfileCard = props => {
 
 
     const onChangeFile = (event) => {
+        if (event.target.files.length < 1) {
+            return;
+        }
         const file = event.target.files[0];
         const fileReader = new FileReader();
         fileReader.onloadend = () => {
@@ -61,9 +64,13 @@ const ProfileCard = props => {
     };
 
     const onClickSave = async () => {
-        const onltyBase64Part = newImage.split(",")[1];
+        let image;
+        if (newImage) {
+            image = newImage.split(",")[1];
+        }
+
         const body = {
-            ...updatedData, image: onltyBase64Part
+            ...updatedData, image
         };
         console.log(body);
         try {

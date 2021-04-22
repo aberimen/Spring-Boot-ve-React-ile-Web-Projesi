@@ -10,4 +10,5 @@ public class UpdatedUserVM {
 	private String lastName;
 
 	private String image;
+	
 }
