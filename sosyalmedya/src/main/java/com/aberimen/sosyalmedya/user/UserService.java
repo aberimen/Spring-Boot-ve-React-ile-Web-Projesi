@@ -1,5 +1,7 @@
 package com.aberimen.sosyalmedya.user;
 
+import java.io.IOException;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -7,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.aberimen.sosyalmedya.api.NotFoundException;
+import com.aberimen.sosyalmedya.file.FileService;
 import com.aberimen.sosyalmedya.user.vm.UpdatedUserVM;
 
 @Service
@@ -16,9 +19,12 @@ public class UserService {
 
 	PasswordEncoder passwordEncoder;
 
-	public UserService(UserRepository userRepository) {
+	FileService fileService;
+
+	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, FileService fileService) {
 		this.userRepository = userRepository;
-		this.passwordEncoder = new BCryptPasswordEncoder();
+		this.passwordEncoder = passwordEncoder;
+		this.fileService = fileService;
 	}
 
 	public void save(User user) {
@@ -51,7 +57,13 @@ public class UserService {
 		userInDB.setLastName(user.getLastName());
 
 		if (user.getImage() != null) {
-			userInDB.setImage(user.getImage());
+			try {
+				String imageFile = fileService.wiriteBase64StringToFile(user.getImage());
+				userInDB.setImage(imageFile);
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return userRepository.save(userInDB);

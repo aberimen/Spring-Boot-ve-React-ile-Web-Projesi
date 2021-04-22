@@ -42,7 +42,6 @@ public class User implements UserDetails {
 	@Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$", message = "password must be at least 8 characters with uppercase letters")
 	private String password;
 	
-	@Lob
 	private String image;
 
 	@Override

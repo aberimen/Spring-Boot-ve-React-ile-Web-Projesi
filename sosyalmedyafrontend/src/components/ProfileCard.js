@@ -61,8 +61,9 @@ const ProfileCard = props => {
     };
 
     const onClickSave = async () => {
+        const onltyBase64Part = newImage.split(",")[1];
         const body = {
-            ...updatedData, image: newImage
+            ...updatedData, image: onltyBase64Part
         };
         console.log(body);
         try {

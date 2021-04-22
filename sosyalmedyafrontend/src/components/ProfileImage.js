@@ -5,11 +5,16 @@ const ProfileImage = (props) => {
     const { username, image } = user;
     let source = defaultProfileImage;
     if (image) {
-        source = image;
+        source = "/images/"+image;
     }
     return (
         <>
-            <img src={newImage || source} className={className} alt={`${username} Profile Photo`} style={style}  />
+            <img src={newImage || source} className={className} 
+            alt={`${username} 
+            Profile Photo`} style={style}  
+            onError = {event =>{
+                event.target.src = defaultProfileImage;
+            }}/>
         </>
     );
 };
