@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Base64;
 import java.util.UUID;
 
@@ -34,5 +36,16 @@ public class FileService {
 	public String getRandomFileName() {
 		return UUID.randomUUID().toString();
 
+	}
+
+	public void deleteFile(String oldImage) {
+		if (oldImage == null) {
+			return;
+		}
+		try {
+			Files.deleteIfExists(Path.of(appConfiguration.getUploadImagePath(), oldImage));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

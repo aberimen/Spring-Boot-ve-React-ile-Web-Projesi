@@ -55,11 +55,14 @@ public class UserService {
 		User userInDB = getByUsername(username);
 		userInDB.setFirstName(user.getFirstName());
 		userInDB.setLastName(user.getLastName());
+		
 
 		if (user.getImage() != null) {
+			String oldImage = userInDB.getImage();
 			try {
 				String imageFile = fileService.wiriteBase64StringToFile(user.getImage());
 				userInDB.setImage(imageFile);
+				fileService.deleteFile(oldImage);
 				
 			} catch (IOException e) {
 				e.printStackTrace();
