@@ -3,6 +3,8 @@ package com.aberimen.sosyalmedya.user.vm;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.aberimen.sosyalmedya.shared.ProfileImage;
+
 import lombok.Data;
 
 @Data
@@ -15,7 +17,8 @@ public class UpdatedUserVM {
 	@NotNull
 	@Size(min = 3, max = 255)
 	private String lastName;
-
+	
+	@ProfileImage
 	private String image;
 
 }
