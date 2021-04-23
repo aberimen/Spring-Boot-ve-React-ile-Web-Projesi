@@ -39,10 +39,7 @@ const ProfileCard = props => {
 
     }, [props.user]);
 
-
-
     const { username, firstName, lastName } = user;
-
 
     useEffect(() => {
         if (!inEditMode) {
@@ -53,7 +50,7 @@ const ProfileCard = props => {
             setUpdatedData({ firstName, lastName });
         }
 
-    }, [inEditMode]);
+    }, [inEditMode]); //inEditModun değişimine göre yapılacak işlemler
 
 
     const onChangeFile = (event) => {
@@ -64,6 +61,7 @@ const ProfileCard = props => {
         const fileReader = new FileReader();
         fileReader.onloadend = () => {
             setNewImage(fileReader.result);
+            setValidationError({ ...validationError, image: undefined }); //başka dosya seçildiğinde inputtaki hatayı silmesi
         };
         fileReader.readAsDataURL(file);
     };
@@ -71,7 +69,7 @@ const ProfileCard = props => {
     const onClickSave = async () => {
         let image;
         if (newImage) {
-            image = newImage.split(",")[1];
+            image = newImage.split(",")[1]; // yüklenen dosyanın sadece virgülden sonraki  base64 ile kodlanmış kısmı alınması. ornek data:image/jpeg;base64,/4AAQSk....
         }
 
         const body = {
@@ -90,13 +88,13 @@ const ProfileCard = props => {
     const onChange = event => {
         const { name, value } = event.target;
 
-        setValidationError({ ...validationError, [name]: undefined });
+        setValidationError({ ...validationError, [name]: undefined }); // validation hatalarının silinmesi
         setUpdatedData({ ...updatedData, [name]: value });
 
     };
 
     const pendingApiCall = useApiProgress('put', '/api/users/' + username);
-    const { firstName: firstNameErr, lastName: lastNameErr } = validationError;
+    const { firstName: firstNameErr, lastName: lastNameErr, image: imageErr } = validationError;
     return (
         <div>
 
@@ -115,7 +113,7 @@ const ProfileCard = props => {
                     }
                     {inEditMode && (
                         <div className="mt-4">
-                            <input type="file" className="form-control-file mb-3" onChange={event => onChangeFile(event)} />
+                            <Input type="file" error={imageErr} name="image" onChange={event => onChangeFile(event)} />
                             <Input label="First Name " error={firstNameErr} defaultValue={firstName} name="firstName" onChange={(event) => onChange(event)} />
                             <Input label="Last Name " error={lastNameErr} defaultValue={lastName} onChange={(event) => onChange(event)} name="lastName" />
                             <ButtonWithProgress className="btn btn-success" text="Save" disabled={pendingApiCall} onClick={() => onClickSave()} pendingApiCall={pendingApiCall} />
