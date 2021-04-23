@@ -22,6 +22,7 @@ const ProfileCard = props => {
     const [editable, setEditable] = useState(false);
 
     const [newImage, setNewImage] = useState();
+    const [validationError, setValidationError] = useState({});
 
     const { loggedInUsername } = useSelector(store => {
         return { loggedInUsername: store.username };
@@ -38,12 +39,16 @@ const ProfileCard = props => {
 
     }, [props.user]);
 
+
+
     const { username, firstName, lastName } = user;
+
 
     useEffect(() => {
         if (!inEditMode) {
             setUpdatedData({});
             setNewImage(undefined);
+            setValidationError({});
         } else {
             setUpdatedData({ firstName, lastName });
         }
@@ -78,12 +83,20 @@ const ProfileCard = props => {
             setUser(response.data);
             setInEditMode(false);
         } catch (error) {
-
+            setValidationError(error.response.data.validationError);
         }
     };
 
-    const pendingApiCall = useApiProgress('put', '/api/users/' + username);
+    const onChange = event => {
+        const { name, value } = event.target;
 
+        setValidationError({ ...validationError, [name]: undefined });
+        setUpdatedData({ ...updatedData, [name]: value });
+
+    };
+
+    const pendingApiCall = useApiProgress('put', '/api/users/' + username);
+    const { firstName: firstNameErr, lastName: lastNameErr } = validationError;
     return (
         <div>
 
@@ -103,8 +116,8 @@ const ProfileCard = props => {
                     {inEditMode && (
                         <div className="mt-4">
                             <input type="file" className="form-control-file mb-3" onChange={event => onChangeFile(event)} />
-                            <Input label="First Name " defaultValue={firstName} onChange={(event) => setUpdatedData({ ...updatedData, firstName: event.target.value })} />
-                            <Input label="Last Name " defaultValue={lastName} onChange={(event) => setUpdatedData({ ...updatedData, lastName: event.target.value })} />
+                            <Input label="First Name " error={firstNameErr} defaultValue={firstName} name="firstName" onChange={(event) => onChange(event)} />
+                            <Input label="Last Name " error={lastNameErr} defaultValue={lastName} onChange={(event) => onChange(event)} name="lastName" />
                             <ButtonWithProgress className="btn btn-success" text="Save" disabled={pendingApiCall} onClick={() => onClickSave()} pendingApiCall={pendingApiCall} />
                             <button className="btn btn-danger ml-2" onClick={() => setInEditMode(false)} disabled={pendingApiCall}>Cancel</button>
                         </div>

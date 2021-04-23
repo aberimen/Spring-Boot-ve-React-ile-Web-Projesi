@@ -48,7 +48,7 @@ public class UserController {
 
 	@PutMapping("/api/users/{username}")
 	@PreAuthorize("#username == principal.username")
-	public UserVM updateFullName(@PathVariable String username, @RequestBody UpdatedUserVM updatedUser) {
+	public UserVM updateUser(@PathVariable String username,@Valid @RequestBody UpdatedUserVM updatedUser) {
 		User user = userService.updateFullName(username, updatedUser);
 
 		return new UserVM(user);
