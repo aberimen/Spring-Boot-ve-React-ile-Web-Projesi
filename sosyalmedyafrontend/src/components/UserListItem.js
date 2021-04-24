@@ -11,7 +11,7 @@ const UserListItem = (props) => {
             <div className="list-group-item">
                 <div className="row">
                     <div className="col-1">
-                        <ProfileImage className="rounded-circle bg-light" user = {user} style={{ width: 50, heigth: 50 }} />
+                        <ProfileImage className="rounded-circle bg-light" user = {user} style={{ width: "50px", height: "50px" }} />
                     </div>
                     <div className="col-11">
                         <div className="font-weight-bold">

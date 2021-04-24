@@ -8,6 +8,7 @@ import { updateUser } from '../api/apiCall';
 import ButtonWithProgress from './ButtonWithProgress';
 import { useApiProgress } from '../api/ApiProgress';
 
+
 const ProfileCard = props => {
 
     const routerParams = useParams();
@@ -22,6 +23,7 @@ const ProfileCard = props => {
     const [editable, setEditable] = useState(false);
 
     const [newImage, setNewImage] = useState();
+
     const [validationError, setValidationError] = useState({});
 
     const { loggedInUsername } = useSelector(store => {
@@ -75,13 +77,14 @@ const ProfileCard = props => {
         const body = {
             ...updatedData, image
         };
-        console.log(body);
         try {
             const response = await updateUser(username, body);
             setUser(response.data);
             setInEditMode(false);
         } catch (error) {
-            setValidationError(error.response.data.validationError);
+            if (error.response.data.validationError) {
+                setValidationError(error.response.data.validationError);
+            }
         }
     };
 

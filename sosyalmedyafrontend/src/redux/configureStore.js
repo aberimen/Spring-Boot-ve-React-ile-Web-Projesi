@@ -12,7 +12,7 @@ const getStateFromLocalStorage = () => {
     let stateInLocalStorage = {
         isLoggedIn: false,
         username: undefined,
-        displayName: undefined,
+        firstName: undefined,
         image: undefined,
         password: undefined
     };

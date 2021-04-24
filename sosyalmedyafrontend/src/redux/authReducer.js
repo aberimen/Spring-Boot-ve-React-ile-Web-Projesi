@@ -3,7 +3,7 @@ import * as Actions from './Constants';
 const defaultState = {
     isLoggedIn: false,
     username: undefined,
-    displayName: undefined,
+    firstName: undefined,
     image: undefined,
     password: undefined
 };

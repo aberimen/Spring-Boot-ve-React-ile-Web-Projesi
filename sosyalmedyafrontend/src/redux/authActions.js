@@ -20,7 +20,7 @@ export const loginHandler = credential => {
         const { username, firstName, image } = response.data;
         const authObject = {
             username,
-            displayName: firstName,
+            firstName,
             password: credential.password,
             image,
             isLoggedIn: true
