@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 //import { Authentication } from '../shared/AuthenticationContext';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ProfileImage from './ProfileImage';
 import Input from './Input';
 import { updateUser } from '../api/apiCall';
 import ButtonWithProgress from './ButtonWithProgress';
 import { useApiProgress } from '../api/ApiProgress';
+import { updateSuccess } from '../redux/authActions';
 
 
 const ProfileCard = props => {
@@ -25,6 +26,8 @@ const ProfileCard = props => {
     const [newImage, setNewImage] = useState();
 
     const [validationError, setValidationError] = useState({});
+
+    const dispatch = useDispatch();
 
     const { loggedInUsername } = useSelector(store => {
         return { loggedInUsername: store.username };
@@ -80,6 +83,7 @@ const ProfileCard = props => {
         try {
             const response = await updateUser(username, body);
             setUser(response.data);
+            dispatch(updateSuccess(response.data)); //redux state'i de güncellemek için.
             setInEditMode(false);
         } catch (error) {
             if (error.response.data.validationError) {

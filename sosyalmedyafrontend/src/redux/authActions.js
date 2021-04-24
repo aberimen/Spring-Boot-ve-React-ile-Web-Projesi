@@ -14,6 +14,13 @@ export const loginSuccess = payload => {
     };
 };
 
+export const updateSuccess = payload => {
+    return {
+        type: Actions.UPDATE_SUCCESS,
+        payload
+    };
+};
+
 export const loginHandler = credential => {
     return async dispatch => {
         const response = await login(credential);

@@ -11,12 +11,16 @@ const defaultState = {
 const authReducer = (state = { ...defaultState }, action) => {
     if (action.type === Actions.LOGOUT_SUCCESS) {
         return defaultState;
-    }
-    if (action.type === Actions.LOGIN_SUCCESS) {
+    } else if (action.type === Actions.LOGIN_SUCCESS) {
         return action.payload;
+    } else if (action.type === Actions.UPDATE_SUCCESS) {
+        return {
+            ...state,
+            ...action.payload
+        };
     }
-    return state;
 
+    return state;
 }
 
 export default authReducer;
