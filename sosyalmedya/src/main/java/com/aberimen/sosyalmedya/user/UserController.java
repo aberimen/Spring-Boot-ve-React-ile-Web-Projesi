@@ -1,7 +1,6 @@
 package com.aberimen.sosyalmedya.user;
 
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.aberimen.sosyalmedya.shared.CurrentUser;
 import com.aberimen.sosyalmedya.shared.GenericResponse;
 import com.aberimen.sosyalmedya.user.vm.UpdatedUserVM;

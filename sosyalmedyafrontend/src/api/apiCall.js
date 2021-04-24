@@ -34,8 +34,12 @@ export const getUserByUsername = (username) => {
 
 export const updateUser = (username, body) => {
     return axios.put(`/api/users/${username}`, body);
-}
+};
 
 export const sendPost = (body) => {
     return axios.post('/api/posts', body);
+};
+
+export const getPosts = () => {
+    return axios.get('/api/posts');
 };
