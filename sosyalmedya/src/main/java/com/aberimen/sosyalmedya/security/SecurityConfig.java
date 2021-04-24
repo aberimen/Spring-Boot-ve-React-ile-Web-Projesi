@@ -28,6 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable();
 
 		http.httpBasic().authenticationEntryPoint(new AuthEntryPoint());
+		
+		http.headers().frameOptions().sameOrigin(); // h2-console erişmek için
 
 		http
 		.authorizeRequests()
