@@ -5,7 +5,7 @@ import PostItem from './PostItem';
 
 const PostFeed = () => {
 
-    const [postPage, setPostPage] = useState({ content: [] });
+    const [postPage, setPostPage] = useState({ content: [], last: true, number: 0 });
 
     const pendingApiCallForSendPost = useApiProgress('post', '/api/posts'); // yeni post eklendiğini takip etmek için
     const pendingApiCallForGetPost = useApiProgress('get', '/api/posts');
@@ -14,16 +14,21 @@ const PostFeed = () => {
         loadPosts();
     }, [pendingApiCallForSendPost]); //yeni post eklendiğinde tekrar çalışsın
 
-    const loadPosts = async () => {
+    const loadPosts = async (page) => {
         try {
-            const response = await getPosts();
-            setPostPage(response.data);
+            const response = await getPosts(page);
+            setPostPage((previousPostPage) => {
+                return {
+                    ...response.data,
+                    content: [...previousPostPage.content, ...response.data.content]
+                };
+            });
         } catch (error) {
 
         }
     };
 
-    const { content: posts } = postPage;
+    const { content: posts, number, last } = postPage;
 
     if (posts.length === 0) { // post yoksa
         return (
@@ -38,6 +43,13 @@ const PostFeed = () => {
             {posts.map((post) => {
                 return <PostItem key={post.id} post={post} />
             })}
+
+            { !last && <div
+                className="alert alert-primary mt-3 mb-5 text-center"
+                style={{ cursor: "pointer" }}
+                onClick={() => loadPosts(number + 1)}>
+                Load Old Posts...
+            </div>}
         </div>
     );
 };

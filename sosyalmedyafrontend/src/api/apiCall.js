@@ -40,6 +40,6 @@ export const sendPost = (body) => {
     return axios.post('/api/posts', body);
 };
 
-export const getPosts = () => {
-    return axios.get('/api/posts');
+export const getPosts = (page = 0) => {
+    return axios.get('/api/posts?page=' + page);
 };
