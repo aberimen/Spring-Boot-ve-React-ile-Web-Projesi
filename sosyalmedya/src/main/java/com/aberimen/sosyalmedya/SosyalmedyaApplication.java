@@ -33,10 +33,13 @@ public class SosyalmedyaApplication {
 
 				userService.save(user);
 
-				Post post = new Post();
-				post.setContent("Merhaba bu bir post denemesi-" + i);
-				
-				postService.savePost(post);
+				for (int j = 0; j < 2; j++) {
+					Post post = new Post();
+					post.setContent("Merhaba bu bir post denemesi " + j + " from " + user.getUsername());
+
+					postService.savePost(post, user);
+
+				}
 			}
 
 		};

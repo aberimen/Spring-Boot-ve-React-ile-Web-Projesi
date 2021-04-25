@@ -10,6 +10,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
+import com.aberimen.sosyalmedya.user.User;
+
 import lombok.Data;
 
 @Entity
@@ -26,5 +28,8 @@ public class Post {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date timestamp;
+	
+	@Column(length = 1000)
+	private User user;
 
 }

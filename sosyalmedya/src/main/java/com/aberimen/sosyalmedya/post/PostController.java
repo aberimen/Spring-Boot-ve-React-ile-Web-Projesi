@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aberimen.sosyalmedya.post.vm.PostVM;
+import com.aberimen.sosyalmedya.shared.CurrentUser;
 import com.aberimen.sosyalmedya.shared.GenericResponse;
+import com.aberimen.sosyalmedya.user.User;
 
 @RestController
 public class PostController {
@@ -22,14 +25,14 @@ public class PostController {
 	private PostService postService;
 
 	@PostMapping("/api/posts")
-	public ResponseEntity<?> saveUser(@Valid @RequestBody Post post) {
-		postService.savePost(post);
+	public ResponseEntity<?> saveUser(@Valid @RequestBody Post post, @CurrentUser User user) {
+		postService.savePost(post,user);
 		return ResponseEntity.ok(new GenericResponse("Post kaydedildi"));
 	}
 	
 	@GetMapping("/api/posts")
-	public Page<Post> getPosts(@PageableDefault(sort = "id",direction = Direction.DESC ) Pageable pageable){
+	public Page<PostVM> getPosts(@PageableDefault(sort = "id",direction = Direction.DESC ) Pageable pageable){
 		
-		return postService.getPosts(pageable);
+		return postService.getPosts(pageable).map(PostVM::new);
 	}
 }
