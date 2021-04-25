@@ -5,7 +5,9 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
@@ -19,7 +21,7 @@ import lombok.Data;
 public class Post {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
 	@Size(min = 5, max = 1000)
@@ -29,7 +31,7 @@ public class Post {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date timestamp;
 	
-	@Column(length = 1000)
+	@ManyToOne
 	private User user;
 
 }

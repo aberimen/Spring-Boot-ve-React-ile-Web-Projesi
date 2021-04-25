@@ -34,7 +34,6 @@ public class UserService {
 
 	public Page<User> getUsers(Pageable pageable, User user) {
 		// PageRequest pageble =PageRequest.of(page, limit);
-		System.out.println(user);
 		if (user != null) {
 			return userRepository.findByUsernameNot(user.getUsername(), pageable);
 		}

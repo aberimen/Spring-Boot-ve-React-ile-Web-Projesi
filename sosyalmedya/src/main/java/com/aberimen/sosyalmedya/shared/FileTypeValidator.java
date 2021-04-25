@@ -28,7 +28,7 @@ public class FileTypeValidator implements ConstraintValidator<FileType, String>{
 		String fileType = fileService.detectType(value);
 		
 		for(String supportedType : fileTypes) {
-			System.out.println(fileType.contains(supportedType));
+
 			if(fileType.contains(supportedType)) {
 				return true;
 			}
