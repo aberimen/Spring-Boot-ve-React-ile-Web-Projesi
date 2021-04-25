@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getPosts } from '../api/apiCall';
 import { useApiProgress } from '../api/ApiProgress';
 import PostItem from './PostItem';
+import Spinner from './Spinner';
 
 const PostFeed = () => {
 
@@ -11,7 +12,11 @@ const PostFeed = () => {
     const pendingApiCallForGetPost = useApiProgress('get', '/api/posts');
 
     useEffect(() => {
-        loadPosts();
+        if (!pendingApiCallForSendPost) {
+            setPostPage({ content: [], last: true, number: 0 });
+            loadPosts();
+        }
+
     }, [pendingApiCallForSendPost]); //yeni post eklendiğinde tekrar çalışsın
 
     const loadPosts = async (page) => {
@@ -33,7 +38,7 @@ const PostFeed = () => {
     if (posts.length === 0) { // post yoksa
         return (
             <div>
-                No posts yet.
+                {pendingApiCallForGetPost ? <Spinner /> : "No posts yet."}
             </div>
         );
     }
@@ -47,8 +52,8 @@ const PostFeed = () => {
             { !last && <div
                 className="alert alert-primary mt-3 mb-5 text-center"
                 style={{ cursor: "pointer" }}
-                onClick={() => loadPosts(number + 1)}>
-                Load Old Posts...
+                onClick={pendingApiCallForGetPost ? () => { } : () => loadPosts(number + 1)}>
+                {pendingApiCallForGetPost ? <Spinner /> : "Load Old Posts..."}
             </div>}
         </div>
     );

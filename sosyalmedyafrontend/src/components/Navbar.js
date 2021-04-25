@@ -93,8 +93,8 @@ const Navbar = props => {
 
                 <div className="navbar ml-auto">
 
-                    <img src="https://www.countryflags.io/tr/flat/24.png" style={{ cursor: "pointer" }} onClick={() => onChangeLanguage("tr")} />
-                    <img src="https://www.countryflags.io/gb/flat/24.png" style={{ cursor: "pointer" }} onClick={() => onChangeLanguage("en")} />
+                    <img src="https://flagcdn.com/w20/tr.png" style={{ cursor: "pointer" }} onClick={() => onChangeLanguage("tr")} />
+                    <img src="https://flagcdn.com/w20/gb.png" style={{ cursor: "pointer" }} onClick={() => onChangeLanguage("en")} />
                     {links}
                 </div>
 
