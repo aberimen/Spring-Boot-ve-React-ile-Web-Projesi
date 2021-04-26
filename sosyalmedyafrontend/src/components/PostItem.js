@@ -9,9 +9,9 @@ const PostItem = (props) => {
     const { content, user, timestamp } = props.post;
     const { username, firstName, lastName } = user;
 
-    const {i18n} = useTranslation();
+    const { i18n } = useTranslation();
 
-    const formattedDate = format(timestamp,i18n.language);
+    const formattedDate = format(timestamp, i18n.language);
 
 
     format

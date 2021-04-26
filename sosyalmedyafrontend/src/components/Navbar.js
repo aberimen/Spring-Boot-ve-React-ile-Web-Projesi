@@ -75,9 +75,9 @@ const Navbar = props => {
                     </div>
                     <div className={dropdownClass}>
 
-                        <Link className="dropdown-item d-flex" to={`/user/${username}`} onClick={() => setDropdownVisible(false)}><span class="material-icons mr-2">person_outline</span>Profile</Link>
+                        <Link className="dropdown-item d-flex" to={`/user/${username}`} onClick={() => setDropdownVisible(false)}><span className="material-icons mr-2">person_outline</span>Profile</Link>
 
-                        <Link className="dropdown-item d-flex" to="/" onClick={onLogoutSuccess}><span class="material-icons mr-2">logout</span>{t('Logout')}</Link>
+                        <Link className="dropdown-item d-flex" to="/" onClick={onLogoutSuccess}><span className="material-icons mr-2">logout</span>{t('Logout')}</Link>
 
                     </div>
                 </li>

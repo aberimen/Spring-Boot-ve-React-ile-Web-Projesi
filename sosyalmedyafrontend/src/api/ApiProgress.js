@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import axios from 'axios';
 
-export const useApiProgress = (apiMethod, apiPath) => {
+export const useApiProgress = (apiMethod, apiPath, strictPath) => {
     const [pendingApiCall, setPendingApiCall] = useState(false);
 
     useEffect(() => {
@@ -9,7 +9,13 @@ export const useApiProgress = (apiMethod, apiPath) => {
         let requestInterceptor, responseInterceptor;
 
         const checkPath = (method, url, isProgress) => {
-            if (url.startsWith(apiPath) && method === apiMethod) {
+            if (method !== apiMethod) {
+                return;
+            }
+            else if (strictPath && url === apiPath) {
+                setPendingApiCall(isProgress);
+            }
+            else if (!strictPath && url.startsWith(apiPath)) {
                 setPendingApiCall(isProgress);
             }
         };
@@ -42,7 +48,7 @@ export const useApiProgress = (apiMethod, apiPath) => {
             unregisterInterceptors();
         }
 
-    }, [apiPath, apiMethod]);
+    }, [apiPath, apiMethod, strictPath]);
 
     return pendingApiCall;
 }

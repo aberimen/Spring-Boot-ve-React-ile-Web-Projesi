@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { getUserByUsername } from '../api/apiCall';
 import { useApiProgress } from '../api/ApiProgress';
+import PostFeed from '../components/PostFeed';
 import ProfileCard from '../components/ProfileCard';
 import Spinner from '../components/Spinner';
 
@@ -11,7 +12,7 @@ const UserPage = props => {
     const [user, setUser] = useState({});
     const [userNotFound, setUserNotFound] = useState(false);
 
-    const pendingApiCall = useApiProgress('get', '/api/users/' + username);
+    const pendingApiCall = useApiProgress('get', '/api/users/' + username, true);
 
     useEffect(() => {
         const loadUser = async () => {
@@ -26,11 +27,6 @@ const UserPage = props => {
         loadUser();
     }, [username]);
 
-    if (pendingApiCall) {
-        return <Spinner />;
-    }
-
-
     if (userNotFound) {
         return (
             <div className="container">
@@ -41,9 +37,20 @@ const UserPage = props => {
         );
     }
 
+    if (pendingApiCall || user.username !== username) {
+        return <Spinner />;
+    }
+
     return (
         <div className="container">
-            <ProfileCard user={user} />
+            <div className="row">
+                <div className="col">
+                    <ProfileCard user={user} />
+                </div>
+                <div className="col">
+                    <PostFeed />
+                </div>
+            </div>
         </div>
     );
 };

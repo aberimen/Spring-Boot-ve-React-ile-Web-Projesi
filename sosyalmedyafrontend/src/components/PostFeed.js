@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 import { getPosts } from '../api/apiCall';
 import { useApiProgress } from '../api/ApiProgress';
 import PostItem from './PostItem';
@@ -8,8 +9,12 @@ const PostFeed = () => {
 
     const [postPage, setPostPage] = useState({ content: [], last: true, number: 0 });
 
+    const { username } = useParams(); //user sayfasından parametre olarak gelen username
+
+    const url = username ? `/api/users/${username}/posts?page=` : '/api/posts?page='; //kullanıcıya ait postları getirirken api isteklerini de dinlemek için
+    const pendingApiCallForGetPost = useApiProgress('get', url);
+
     const pendingApiCallForSendPost = useApiProgress('post', '/api/posts'); // yeni post eklendiğini takip etmek için
-    const pendingApiCallForGetPost = useApiProgress('get', '/api/posts');
 
     useEffect(() => {
         if (!pendingApiCallForSendPost) {
@@ -21,7 +26,7 @@ const PostFeed = () => {
 
     const loadPosts = async (page) => {
         try {
-            const response = await getPosts(page);
+            const response = await getPosts(username, page);
             setPostPage((previousPostPage) => {
                 return {
                     ...response.data,
