@@ -33,7 +33,7 @@ public class SosyalmedyaApplication {
 
 				userService.save(user);
 
-				for (int j = 0; j < 2; j++) {
+				for (int j = 0; j < 25; j++) {
 					Post post = new Post();
 					post.setContent("Merhaba bu bir post denemesi " + j + " from " + user.getUsername());
 

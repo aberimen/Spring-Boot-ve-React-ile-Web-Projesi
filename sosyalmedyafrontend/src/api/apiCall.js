@@ -40,5 +40,10 @@ export const sendPost = (body) => {
 
 export const getPosts = (username, page = 0) => {
     const url = username ? `/api/users/${username}/posts?page=` : '/api/posts?page=';
-    return axios.get(url +page);
+    return axios.get(url + page);
+};
+
+export const getOldPosts = (username, id) => {
+    const url = username ? `/api/users/${username}/posts/` : '/api/posts/';
+    return axios.get(url + id);
 };

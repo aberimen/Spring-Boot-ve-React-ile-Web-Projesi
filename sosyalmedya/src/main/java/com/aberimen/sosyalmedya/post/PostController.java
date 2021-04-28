@@ -24,7 +24,6 @@ public class PostController {
 
 	@Autowired
 	private PostService postService;
-	
 
 	@PostMapping("/api/posts")
 	public ResponseEntity<?> saveUser(@Valid @RequestBody Post post, @CurrentUser User user) {
@@ -43,5 +42,18 @@ public class PostController {
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
 
 		return postService.getUserPosts(username, pageable).map(PostVM::new);
+	}
+
+	@GetMapping("/api/posts/{id:[0-9]+}")
+	public Page<PostVM> getPostsRelative(@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
+			@PathVariable long id) {
+		return postService.getOldPosts(pageable, id).map(PostVM::new);
+	}
+
+	@GetMapping("/api/users/{username}/posts/{id:[0-9]+}")
+	public Page<PostVM> getUserPostsRelative(@PathVariable String username, @PathVariable long id,
+			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
+
+		return postService.getUserOldPosts(username, id, pageable).map(PostVM::new);
 	}
 }
