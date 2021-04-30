@@ -48,7 +48,7 @@ export const getOldPosts = (username, id) => {
     return axios.get(url + id);
 };
 
-export const getNewPostCount = (id) => {
-    const url = `/api/posts/${id}?count=true`;
+export const getNewPostCount = (username, id) => {
+    const url = username ? `/api/users/${username}/posts/${id}?count=true` : `/api/posts/${id}?count=true`;
     return axios.get(url);
 }

@@ -30,14 +30,14 @@ const PostFeed = () => {
 
     useEffect(() => {
         let loop = setInterval(async () => {
-            const response = await getNewPostCount(firstPostId);
+            const response = await getNewPostCount(username, firstPostId);
             setNewPostCount(response.data.count);
         }, 1000);
 
         return () => { //unmount
             clearInterval(loop);
         };
-    }, [firstPostId]);
+    }, [firstPostId, username]);
 
     useEffect(() => {
         if (!pendingApiCallForSendPost) {

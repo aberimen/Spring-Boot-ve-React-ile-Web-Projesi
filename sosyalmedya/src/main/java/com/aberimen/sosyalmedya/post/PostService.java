@@ -32,24 +32,29 @@ public class PostService {
 
 	public Page<Post> getUserPosts(String username, Pageable pageable) {
 		User userInDB = userService.getByUsername(username);
-		
+
 		return postRepository.findByUser(userInDB, pageable);
 	}
 
 	public Page<Post> getOldPosts(Pageable pageable, long id) {
-		
+
 		return postRepository.findByIdLessThan(id, pageable);
 	}
 
 	public Page<Post> getUserOldPosts(String username, long id, Pageable pageable) {
 		User userInDB = userService.getByUsername(username);
-		
+
 		return postRepository.findByIdLessThanAndUser(id, userInDB, pageable);
 	}
 
 	public long getNewPostCount(long id) {
-		
+
 		return postRepository.countByIdGreaterThan(id);
+	}
+
+	public Long getNewPostCountOfUser(String username, long id) {
+		User inDb = userService.getByUsername(username);
+		return postRepository.countByIdGreaterThanAndUser(id, inDb);
 	}
 
 }

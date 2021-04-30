@@ -11,7 +11,8 @@ const UserPage = props => {
     const { username } = useParams();
     const [user, setUser] = useState({});
     const [userNotFound, setUserNotFound] = useState(false);
-
+    const [newPostCount, setNewPostCount] = useState(0);
+    
     const pendingApiCall = useApiProgress('get', '/api/users/' + username, true);
 
     useEffect(() => {

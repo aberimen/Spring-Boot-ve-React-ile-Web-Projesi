@@ -58,15 +58,23 @@ public class PostController {
 			response.put("count", postService.getNewPostCount(id));
 			return ResponseEntity.ok(response);
 		}
-		
+
 		return ResponseEntity.ok(postService.getOldPosts(pageable, id).map(PostVM::new));
 	}
-	
 
 	@GetMapping("/api/users/{username}/posts/{id:[0-9]+}")
-	public Page<PostVM> getUserPostsRelative(@PathVariable String username, @PathVariable long id,
-			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
+	public ResponseEntity<?> getUserPostsRelative(@PathVariable String username, @PathVariable long id,
+			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
+			@RequestParam(required = false, defaultValue = "false") boolean count) {
 
-		return postService.getUserOldPosts(username, id, pageable).map(PostVM::new);
+		if (count) {
+			Map<String, Long> response = new HashMap<>();
+			response.put("count", postService.getNewPostCountOfUser(username, id));
+
+			return ResponseEntity.ok(response);
+
+		}
+
+		return ResponseEntity.ok(postService.getUserOldPosts(username, id, pageable).map(PostVM::new));
 	}
 }

@@ -8,13 +8,15 @@ import org.springframework.stereotype.Repository;
 import com.aberimen.sosyalmedya.user.User;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Long>{
-	
+public interface PostRepository extends JpaRepository<Post, Long> {
+
 	Page<Post> findByUser(User user, Pageable page);
-	
+
 	Page<Post> findByIdLessThan(long id, Pageable page);
-	
+
 	Page<Post> findByIdLessThanAndUser(long id, User user, Pageable page);
-	
+
 	long countByIdGreaterThan(long id);
+
+	long countByIdGreaterThanAndUser(long id, User user);
 }
