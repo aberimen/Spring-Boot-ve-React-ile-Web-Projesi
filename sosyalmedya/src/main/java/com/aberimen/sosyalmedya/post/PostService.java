@@ -60,8 +60,13 @@ public class PostService {
 	}
 
 	public List<Post> getNewPosts(long id, Sort sort) {
-		
+
 		return postRepository.findByIdGreaterThan(id, sort);
+	}
+
+	public List<Post> getNewPostsOfUser(String username, long id, Sort sort) {
+		User inDb = userService.getByUsername(username);
+		return postRepository.findByIdGreaterThanAndUser(id, inDb, sort);
 	}
 
 }

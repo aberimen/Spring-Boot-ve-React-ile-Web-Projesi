@@ -27,7 +27,8 @@ const PostFeed = () => {
 
     const urlOldPost = username ? `/api/users/${username}/posts/` : '/api/posts/';
     const loadOldPostsProgress = useApiProgress('get', urlOldPost + latsPostId, true);
-    const loadNewPostsProgress = useApiProgress('get',`/api/posts/${firstPostId}?direction=after`,true);
+    const urlNewPost = username ? `/api/users/${username}/posts/${firstPostId}?direction=after` : `/api/posts/${firstPostId}?direction=after`;
+    const loadNewPostsProgress = useApiProgress('get', urlNewPost, true);
 
     useEffect(() => {
         let loop = setInterval(async () => {
@@ -77,18 +78,18 @@ const PostFeed = () => {
     };
 
     const loadNewPosts = async () => {
-       try{
-        const response = await getNewPosts(firstPostId);
-        setNewPostCount(0);
-        setPostPage((previousPostPage) =>{
-            return {
-                ...previousPostPage,
-                content : [...response.data , ...previousPostPage.content]
-            }
-        });
-       }catch(err){
+        try {
+            const response = await getNewPosts(username, firstPostId);
+            setNewPostCount(0);
+            setPostPage((previousPostPage) => {
+                return {
+                    ...previousPostPage,
+                    content: [...response.data, ...previousPostPage.content]
+                }
+            });
+        } catch (err) {
 
-       }
+        }
     }
 
     const { content: posts, last } = postPage;
@@ -109,7 +110,7 @@ const PostFeed = () => {
                     style={{ cursor: "pointer" }}
                     onClick={loadNewPostsProgress ? () => { } : () => loadNewPosts()}>
                     {loadNewPostsProgress ? <Spinner /> : "Load New Posts..."}
-            </div>
+                </div>
             }
 
             {posts.map((post) => {

@@ -63,8 +63,8 @@ public class PostController {
 		}
 
 		if (direction.equals("after")) {
-			List<PostVM> newPosts = postService.getNewPosts(id, pageable.getSort())
-					.stream().map(PostVM::new).collect(Collectors.toList());
+			List<PostVM> newPosts = postService.getNewPosts(id, pageable.getSort()).stream().map(PostVM::new)
+					.collect(Collectors.toList());
 
 			return ResponseEntity.ok(newPosts);
 		}
@@ -75,14 +75,20 @@ public class PostController {
 	@GetMapping("/api/users/{username}/posts/{id:[0-9]+}")
 	public ResponseEntity<?> getUserPostsRelative(@PathVariable String username, @PathVariable long id,
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
-			@RequestParam(required = false, defaultValue = "false") boolean count) {
+			@RequestParam(required = false, defaultValue = "false") boolean count,
+			@RequestParam(required = false, defaultValue = "before") String direction) {
 
 		if (count) {
 			Map<String, Long> response = new HashMap<>();
 			response.put("count", postService.getNewPostCountOfUser(username, id));
 
 			return ResponseEntity.ok(response);
+		}
 
+		if (direction.equals("after")) {
+			List<PostVM> newPosts = postService.getNewPostsOfUser(username, id, pageable.getSort()).stream()
+					.map(PostVM::new).collect(Collectors.toList());
+			return ResponseEntity.ok(newPosts);
 		}
 
 		return ResponseEntity.ok(postService.getUserOldPosts(username, id, pageable).map(PostVM::new));

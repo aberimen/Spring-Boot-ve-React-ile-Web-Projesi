@@ -53,8 +53,8 @@ export const getNewPostCount = (username, id) => {
     return axios.get(url);
 };
 
-export const getNewPosts = (id) => {
-    const url = `/api/posts/${id}?direction=after`;
+export const getNewPosts = (username, id) => {
+    const url = username ? `/api/users/${username}/posts/${id}?direction=after` : `/api/posts/${id}?direction=after`;
 
     return axios.get(url);
 };
