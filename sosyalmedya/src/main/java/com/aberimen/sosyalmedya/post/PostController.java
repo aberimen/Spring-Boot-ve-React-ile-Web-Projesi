@@ -1,7 +1,9 @@
 package com.aberimen.sosyalmedya.post;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -51,12 +53,20 @@ public class PostController {
 	@GetMapping("/api/posts/{id:[0-9]+}")
 	public ResponseEntity<?> getPostsRelative(
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable, @PathVariable long id,
-			@RequestParam(required = false, defaultValue = "false") boolean count) {
+			@RequestParam(required = false, defaultValue = "false") boolean count,
+			@RequestParam(required = false, defaultValue = "before") String direction) {
 
 		if (count) {
 			Map<String, Long> response = new HashMap<>();
 			response.put("count", postService.getNewPostCount(id));
 			return ResponseEntity.ok(response);
+		}
+
+		if (direction.equals("after")) {
+			List<PostVM> newPosts = postService.getNewPosts(id, pageable.getSort())
+					.stream().map(PostVM::new).collect(Collectors.toList());
+
+			return ResponseEntity.ok(newPosts);
 		}
 
 		return ResponseEntity.ok(postService.getOldPosts(pageable, id).map(PostVM::new));

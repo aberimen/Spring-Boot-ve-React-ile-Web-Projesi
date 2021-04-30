@@ -1,10 +1,12 @@
 package com.aberimen.sosyalmedya.post;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.aberimen.sosyalmedya.user.User;
@@ -55,6 +57,11 @@ public class PostService {
 	public Long getNewPostCountOfUser(String username, long id) {
 		User inDb = userService.getByUsername(username);
 		return postRepository.countByIdGreaterThanAndUser(id, inDb);
+	}
+
+	public List<Post> getNewPosts(long id, Sort sort) {
+		
+		return postRepository.findByIdGreaterThan(id, sort);
 	}
 
 }

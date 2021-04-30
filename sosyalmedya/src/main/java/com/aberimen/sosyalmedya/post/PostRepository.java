@@ -1,7 +1,10 @@
 package com.aberimen.sosyalmedya.post;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +22,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	long countByIdGreaterThan(long id);
 
 	long countByIdGreaterThanAndUser(long id, User user);
+	
+	List<Post> findByIdGreaterThan(long id, Sort sort);
 }
