@@ -47,4 +47,9 @@ public class PostService {
 		return postRepository.findByIdLessThanAndUser(id, userInDB, pageable);
 	}
 
+	public long getNewPostCount(long id) {
+		
+		return postRepository.countByIdGreaterThan(id);
+	}
+
 }

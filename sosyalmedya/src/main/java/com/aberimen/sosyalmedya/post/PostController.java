@@ -1,5 +1,8 @@
 package com.aberimen.sosyalmedya.post;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aberimen.sosyalmedya.post.vm.PostVM;
@@ -45,10 +49,19 @@ public class PostController {
 	}
 
 	@GetMapping("/api/posts/{id:[0-9]+}")
-	public Page<PostVM> getPostsRelative(@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
-			@PathVariable long id) {
-		return postService.getOldPosts(pageable, id).map(PostVM::new);
+	public ResponseEntity<?> getPostsRelative(
+			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable, @PathVariable long id,
+			@RequestParam(required = false, defaultValue = "false") boolean count) {
+
+		if (count) {
+			Map<String, Long> response = new HashMap<>();
+			response.put("count", postService.getNewPostCount(id));
+			return ResponseEntity.ok(response);
+		}
+		
+		return ResponseEntity.ok(postService.getOldPosts(pageable, id).map(PostVM::new));
 	}
+	
 
 	@GetMapping("/api/users/{username}/posts/{id:[0-9]+}")
 	public Page<PostVM> getUserPostsRelative(@PathVariable String username, @PathVariable long id,
