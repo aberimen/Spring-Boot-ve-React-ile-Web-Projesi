@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
+import java.util.Date;
 import java.util.UUID;
 
 import org.apache.tika.Tika;
@@ -21,6 +22,9 @@ public class FileService {
 
 	@Autowired
 	AppConfiguration appConfiguration;
+
+	@Autowired
+	FileAttachmentRepository fileAttachmentRepository;
 
 	public String wiriteBase64StringToFile(String image) throws IOException {
 
@@ -59,7 +63,7 @@ public class FileService {
 		return tika.detect(decodedString);
 	}
 
-	public String savePostAttachment(MultipartFile multipartFile) {
+	public FileAttachment savePostAttachment(MultipartFile multipartFile) {
 
 		String fileName = getRandomFileName();
 		File file = new File(appConfiguration.getUploadImagePath() + "/" + fileName);
@@ -69,11 +73,15 @@ public class FileService {
 			outputStream.write(multipartFile.getBytes());
 			outputStream.close();
 		} catch (IOException e) {
-			
+
 			e.printStackTrace();
 		}
 
-		return fileName;
+		FileAttachment fileAttachment = new FileAttachment();
+		fileAttachment.setName(fileName);
+		fileAttachment.setDate(new Date());
+
+		return fileAttachmentRepository.save(fileAttachment);
 
 	}
 }
