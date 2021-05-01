@@ -32,7 +32,7 @@ public class PostController {
 	private PostService postService;
 
 	@PostMapping("/api/posts")
-	public ResponseEntity<?> saveUser(@Valid @RequestBody Post post, @CurrentUser User user) {
+	public ResponseEntity<?> savePost(@Valid @RequestBody Post post, @CurrentUser User user) {
 		postService.savePost(post, user);
 		return ResponseEntity.ok(new GenericResponse("Post kaydedildi"));
 	}
@@ -50,47 +50,28 @@ public class PostController {
 		return postService.getUserPosts(username, pageable).map(PostVM::new);
 	}
 
-	@GetMapping("/api/posts/{id:[0-9]+}")
+	@GetMapping({ "/api/posts/{id:[0-9]+}", "/api/users/{username}/posts/{id:[0-9]+}" })
 	public ResponseEntity<?> getPostsRelative(
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable, @PathVariable long id,
+			@PathVariable(required = false) String username,
 			@RequestParam(required = false, defaultValue = "false") boolean count,
 			@RequestParam(required = false, defaultValue = "before") String direction) {
 
 		if (count) {
 			Map<String, Long> response = new HashMap<>();
-			response.put("count", postService.getNewPostCount(id));
+			response.put("count", postService.getNewPostCount(username, id));
 			return ResponseEntity.ok(response);
 		}
 
 		if (direction.equals("after")) {
-			List<PostVM> newPosts = postService.getNewPosts(id, pageable.getSort()).stream().map(PostVM::new)
+			List<PostVM> newPosts = postService.getNewPosts(username, id, pageable.getSort()).stream().map(PostVM::new)
 					.collect(Collectors.toList());
 
 			return ResponseEntity.ok(newPosts);
 		}
 
-		return ResponseEntity.ok(postService.getOldPosts(pageable, id).map(PostVM::new));
+		return ResponseEntity.ok(postService.getOldPosts(username, pageable, id).map(PostVM::new));
 	}
 
-	@GetMapping("/api/users/{username}/posts/{id:[0-9]+}")
-	public ResponseEntity<?> getUserPostsRelative(@PathVariable String username, @PathVariable long id,
-			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
-			@RequestParam(required = false, defaultValue = "false") boolean count,
-			@RequestParam(required = false, defaultValue = "before") String direction) {
 
-		if (count) {
-			Map<String, Long> response = new HashMap<>();
-			response.put("count", postService.getNewPostCountOfUser(username, id));
-
-			return ResponseEntity.ok(response);
-		}
-
-		if (direction.equals("after")) {
-			List<PostVM> newPosts = postService.getNewPostsOfUser(username, id, pageable.getSort()).stream()
-					.map(PostVM::new).collect(Collectors.toList());
-			return ResponseEntity.ok(newPosts);
-		}
-
-		return ResponseEntity.ok(postService.getUserOldPosts(username, id, pageable).map(PostVM::new));
-	}
 }

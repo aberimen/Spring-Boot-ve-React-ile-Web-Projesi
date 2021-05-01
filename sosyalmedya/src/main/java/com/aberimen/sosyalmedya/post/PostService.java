@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.aberimen.sosyalmedya.user.User;
@@ -38,35 +39,49 @@ public class PostService {
 		return postRepository.findByUser(userInDB, pageable);
 	}
 
-	public Page<Post> getOldPosts(Pageable pageable, long id) {
+	public Page<Post> getOldPosts(String username, Pageable pageable, long id) {
+		Specification<Post> specification = idLessThan(id);
+		if (username != null) {
+			User inDb = userService.getByUsername(username);
+			specification = specification.and(isUser(inDb));
+		}
+		return postRepository.findAll(specification, pageable);
 
-		return postRepository.findByIdLessThan(id, pageable);
 	}
 
-	public Page<Post> getUserOldPosts(String username, long id, Pageable pageable) {
-		User userInDB = userService.getByUsername(username);
-
-		return postRepository.findByIdLessThanAndUser(id, userInDB, pageable);
+	public long getNewPostCount(String username, long id) {
+		Specification<Post> specification = idGreaterThan(id);
+		if (username != null) {
+			User inDb = userService.getByUsername(username);
+			specification = specification.and(isUser(inDb));
+		}
+		return postRepository.count(specification);
 	}
 
-	public long getNewPostCount(long id) {
+	public List<Post> getNewPosts(String username, long id, Sort sort) {
 
-		return postRepository.countByIdGreaterThan(id);
+		Specification<Post> specification = idGreaterThan(id);
+		if (username != null) {
+			User inDb = userService.getByUsername(username);
+			specification = specification.and(isUser(inDb));
+		}
+		return postRepository.findAll(specification, sort);
+
 	}
 
-	public Long getNewPostCountOfUser(String username, long id) {
-		User inDb = userService.getByUsername(username);
-		return postRepository.countByIdGreaterThanAndUser(id, inDb);
+	Specification<Post> idGreaterThan(long id) {
+		return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThan(root.get("id"), id);
+
 	}
 
-	public List<Post> getNewPosts(long id, Sort sort) {
+	Specification<Post> idLessThan(long id) {
+		return (root, query, criteriaBuilder) -> criteriaBuilder.lessThan(root.get("id"), id);
 
-		return postRepository.findByIdGreaterThan(id, sort);
 	}
 
-	public List<Post> getNewPostsOfUser(String username, long id, Sort sort) {
-		User inDb = userService.getByUsername(username);
-		return postRepository.findByIdGreaterThanAndUser(id, inDb, sort);
+	Specification<Post> isUser(User user) {
+		return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("user"), user);
+
 	}
 
 }
