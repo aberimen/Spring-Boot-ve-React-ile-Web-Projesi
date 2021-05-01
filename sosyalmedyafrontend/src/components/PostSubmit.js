@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { sendPost } from '../api/apiCall';
+import { sendPost, sendPostAttachment } from '../api/apiCall';
 import { useApiProgress } from '../api/ApiProgress';
 import ButtonWithProgress from './ButtonWithProgress';
 import ProfileImage from './ProfileImage';
@@ -48,6 +48,8 @@ const PostSubmit = () => {
         const fileReader = new FileReader();
         fileReader.onloadend = () => {
             setNewImage(fileReader.result);
+            uploadFile(file);
+            console.log(file);
             setValidationError({ ...validationError, image: undefined }); //başka dosya seçildiğinde inputtaki hatayı silmesi
         };
         fileReader.readAsDataURL(file);
@@ -59,10 +61,16 @@ const PostSubmit = () => {
         className += " is-invalid";
     }
 
-    const onClickCloseImage = () =>{
+    const onClickCloseImage = () => {
         setNewImage();
-        document.getElementById('image').value= null;
+        document.getElementById('image').value = null;
     };
+
+    const uploadFile = async (file) => {
+        const body = new FormData();
+        body.append("file", file);
+        await sendPostAttachment(body);
+    }
 
     return (
         <div>
@@ -77,12 +85,12 @@ const PostSubmit = () => {
                     <div class="invalid-feedback"> {validationError.content}</div>
 
                     <Input id="image" type="file" onChange={onChangeFile} />
-                    <div className="position-relative" style={{display: newImage ? "block" : "none"}}>
-                        <button type="button" 
-                        className="close position-absolute text-white rounded-circle bg-secondary" 
-                        style={{ right: "1rem", top: "1rem", width: "2rem" ,height:"2rem"}} 
-                        aria-label="Close"
-                        onClick={onClickCloseImage}>
+                    <div className="position-relative" style={{ display: newImage ? "block" : "none" }}>
+                        <button type="button"
+                            className="close position-absolute text-white rounded-circle bg-secondary"
+                            style={{ right: "1rem", top: "1rem", width: "2rem", height: "2rem" }}
+                            aria-label="Close"
+                            onClick={onClickCloseImage}>
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <img class="img-fluid img-thumbnail" src={newImage} />
