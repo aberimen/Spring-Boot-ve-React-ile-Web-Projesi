@@ -36,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.POST, "/api/auth").authenticated()
 			.antMatchers(HttpMethod.PUT, "/api/users/{username}").authenticated()
 			.antMatchers(HttpMethod.POST, "/api/posts").authenticated() //sadece giriş yapmış kullanıcılar paylaşım yapabilsin
+			.antMatchers(HttpMethod.POST,"/api/post-attachments").authenticated()
 			.and()
 				.authorizeRequests().anyRequest().permitAll();
 	}
