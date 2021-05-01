@@ -1,0 +1,44 @@
+.image-container {
+  position: relative;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  z-index: 0;
+  transition: 0.5s ease;
+  background-color: #0000009d;
+}
+
+.spinner {
+  color: white;
+  margin: auto;
+  width: 4rem;
+  height: 4rem;
+}
+
+.spinner span {
+ color: black;
+}
+
+div .close-image-button {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  width: 2rem;
+  height: 2rem;
+  color: white;
+  border-radius: 50%;
+  background-color: rgb(53, 52, 52);
+  z-index: 1;
+}
+
+div .close-image-button span:hover,
+div .close-image-button:hover {
+  color: white;
+}

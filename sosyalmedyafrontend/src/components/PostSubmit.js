@@ -5,6 +5,7 @@ import { useApiProgress } from '../api/ApiProgress';
 import ButtonWithProgress from './ButtonWithProgress';
 import ProfileImage from './ProfileImage';
 import Input from './Input';
+import ImageAttachment from './ImageAttachment';
 
 const PostSubmit = () => {
 
@@ -13,7 +14,8 @@ const PostSubmit = () => {
     const [validationError, setValidationError] = useState({});
     const [newImage, setNewImage] = useState();
 
-    const pendingApiCall = useApiProgress('post', '/api/posts');
+    const pendingApiCall = useApiProgress('post', '/api/posts', true);
+    const pendingFileUpload = useApiProgress('post', '/api/post-attachments', true);
 
     const user = useSelector((store) => {
         return store;
@@ -49,7 +51,6 @@ const PostSubmit = () => {
         fileReader.onloadend = () => {
             setNewImage(fileReader.result);
             uploadFile(file);
-            console.log(file);
             setValidationError({ ...validationError, image: undefined }); //başka dosya seçildiğinde inputtaki hatayı silmesi
         };
         fileReader.readAsDataURL(file);
@@ -61,10 +62,7 @@ const PostSubmit = () => {
         className += " is-invalid";
     }
 
-    const onClickCloseImage = () => {
-        setNewImage();
-        document.getElementById('image').value = null;
-    };
+
 
     const uploadFile = async (file) => {
         const body = new FormData();
@@ -82,19 +80,10 @@ const PostSubmit = () => {
 
                     <textarea className={className} rows={focused ? "3" : "1"}
                         onFocus={() => setFocused(true)} onChange={(event) => onChange(event)} value={post} />
-                    <div class="invalid-feedback"> {validationError.content}</div>
+                    <div className="invalid-feedback"> {validationError.content}</div>
 
                     <Input id="image" type="file" onChange={onChangeFile} />
-                    <div className="position-relative" style={{ display: newImage ? "block" : "none" }}>
-                        <button type="button"
-                            className="close position-absolute text-white rounded-circle bg-secondary"
-                            style={{ right: "1rem", top: "1rem", width: "2rem", height: "2rem" }}
-                            aria-label="Close"
-                            onClick={onClickCloseImage}>
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <img class="img-fluid img-thumbnail" src={newImage} />
-                    </div>
+                    <ImageAttachment image={newImage} pending={pendingFileUpload} />
 
 
                     <ButtonWithProgress
