@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
-import com.aberimen.sosyalmedya.post.Post;
 import com.aberimen.sosyalmedya.post.PostService;
+import com.aberimen.sosyalmedya.post.vm.PostSubmitVM;
 import com.aberimen.sosyalmedya.user.User;
 import com.aberimen.sosyalmedya.user.UserService;
 
@@ -34,7 +34,7 @@ public class SosyalmedyaApplication {
 				userService.save(user);
 
 				for (int j = 0; j < 25; j++) {
-					Post post = new Post();
+					PostSubmitVM post = new PostSubmitVM();
 					post.setContent("Merhaba bu bir post denemesi " + j + " from " + user.getUsername());
 
 					postService.savePost(post, user);

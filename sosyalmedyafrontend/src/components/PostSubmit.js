@@ -13,6 +13,7 @@ const PostSubmit = () => {
     const [post, setPost] = useState("");
     const [validationError, setValidationError] = useState({});
     const [newImage, setNewImage] = useState();
+    const [attachmentId, setAttachmentId] = useState();
 
     const pendingApiCall = useApiProgress('post', '/api/posts', true);
     const pendingFileUpload = useApiProgress('post', '/api/post-attachments', true);
@@ -28,7 +29,8 @@ const PostSubmit = () => {
 
     const onClickPost = async () => {
         const body = {
-            content: post
+            content: post,
+            attachmentId
         };
         try {
             await sendPost(body);
@@ -38,7 +40,6 @@ const PostSubmit = () => {
             if (error.response.data.validationError) {
                 setValidationError(error.response.data.validationError);
             }
-
         }
     };
 
@@ -62,13 +63,14 @@ const PostSubmit = () => {
         className += " is-invalid";
     }
 
-
-
     const uploadFile = async (file) => {
         const body = new FormData();
         body.append("file", file);
-        await sendPostAttachment(body);
+        const response = await sendPostAttachment(body);
+
+        setAttachmentId(response.data.id);
     }
+
 
     return (
         <div>

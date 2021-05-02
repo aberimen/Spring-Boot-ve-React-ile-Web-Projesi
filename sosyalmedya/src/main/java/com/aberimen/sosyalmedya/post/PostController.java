@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aberimen.sosyalmedya.post.vm.PostSubmitVM;
 import com.aberimen.sosyalmedya.post.vm.PostVM;
 import com.aberimen.sosyalmedya.shared.CurrentUser;
 import com.aberimen.sosyalmedya.shared.GenericResponse;
@@ -32,7 +33,7 @@ public class PostController {
 	private PostService postService;
 
 	@PostMapping("/api/posts")
-	public ResponseEntity<?> savePost(@Valid @RequestBody Post post, @CurrentUser User user) {
+	public ResponseEntity<?> savePost(@Valid @RequestBody PostSubmitVM post, @CurrentUser User user) {
 		postService.savePost(post, user);
 		return ResponseEntity.ok(new GenericResponse("Post kaydedildi"));
 	}

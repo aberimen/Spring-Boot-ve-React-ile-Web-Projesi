@@ -2,6 +2,7 @@ package com.aberimen.sosyalmedya.post;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.aberimen.sosyalmedya.file.FileAttachment;
+import com.aberimen.sosyalmedya.file.FileAttachmentRepository;
+import com.aberimen.sosyalmedya.post.vm.PostSubmitVM;
 import com.aberimen.sosyalmedya.user.User;
 import com.aberimen.sosyalmedya.user.UserService;
 
@@ -22,10 +26,23 @@ public class PostService {
 	@Autowired
 	private UserService userService;
 
-	public void savePost(Post post, User user) {
+	@Autowired
+	private FileAttachmentRepository attachmentRepository;
+
+	public void savePost(PostSubmitVM postSubmitVM, User user) {
+		Post post = new Post();
+		post.setContent(postSubmitVM.getContent());
 		post.setTimestamp(new Date());
 		post.setUser(user);
 		postRepository.save(post);
+		
+		Optional<FileAttachment> optionalFileAttachment = attachmentRepository.findById(postSubmitVM.getAttachmentId());
+		if (optionalFileAttachment.isPresent()) {
+			FileAttachment fileAttachment = optionalFileAttachment.get();
+			fileAttachment.setPost(post);
+			attachmentRepository.save(fileAttachment);
+		}
+
 	}
 
 	public Page<Post> getPosts(Pageable pageable) {
