@@ -26,6 +26,8 @@ public class FileAttachment {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
+	
+	private String fileType;
 
 	@OneToOne
 	private Post post;

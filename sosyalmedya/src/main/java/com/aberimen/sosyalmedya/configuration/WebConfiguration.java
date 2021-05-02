@@ -21,23 +21,29 @@ public class WebConfiguration implements WebMvcConfigurer {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
 		registry.addResourceHandler("/images/**") // bu adrese yapılacak istekler
-				.addResourceLocations("file:./" + appConfiguration.getUploadImagePath() + "/") // klasör yolu
+				.addResourceLocations("file:./" + appConfiguration.getUploadPath() + "/") // klasör yolu
 				.setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS)); // browser tarafından cache'lenmesi.
 
 	}
 
 
 	@Bean
-	public CommandLineRunner createDirectory() {
+	public CommandLineRunner initialStorageFolders() {
 
 		return (args) -> {
-			File folder = new File(appConfiguration.getUploadImagePath());
-			boolean folderExists = folder.exists() && folder.isDirectory();
-
-			if (!folderExists) {
-				folder.mkdir();
-			}
+			createFolder(appConfiguration.getUploadPath());
+			createFolder(appConfiguration.getProfileUploadPath());
+			createFolder(appConfiguration.getAttachmentUploadPath());
 		};
 
+	}
+	
+	private void createFolder(String path) {
+		File folder = new File(path);
+		boolean folderExists = folder.exists() && folder.isDirectory();
+
+		if (!folderExists) {
+			folder.mkdir();
+		}
 	}
 }

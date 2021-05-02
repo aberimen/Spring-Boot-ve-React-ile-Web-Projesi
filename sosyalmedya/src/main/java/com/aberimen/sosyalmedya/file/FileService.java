@@ -35,7 +35,7 @@ public class FileService {
 		byte[] decodedString = Base64.getDecoder().decode(image);
 
 		String fileName = getRandomFileName();
-		File file = new File(appConfiguration.getUploadImagePath() + "/" + fileName);
+		File file = new File(appConfiguration.getProfileUploadPath()+ "/" + fileName);
 
 		OutputStream outputStream = new FileOutputStream(file);
 		outputStream.write(decodedString);
@@ -54,10 +54,18 @@ public class FileService {
 			return;
 		}
 		try {
-			Files.deleteIfExists(Path.of(appConfiguration.getUploadImagePath(), oldImage));
+			Files.deleteIfExists(Path.of(appConfiguration.getUploadPath(), oldImage));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void deleteAttachment(String file) {
+		deleteFile(appConfiguration.getAttachmentUploadPath() + "/" + file);
+	}
+
+	public void deleteProfileImage(String file) {
+		deleteFile(appConfiguration.getProfileUploadPath() + "/" + file);
 	}
 
 	public String detectType(String file) {
@@ -67,15 +75,23 @@ public class FileService {
 		return tika.detect(decodedString);
 	}
 
+	public String detectType(byte[] bytes) {
+		Tika tika = new Tika(); // dosya formatı kontrolü için
+
+		return tika.detect(bytes);
+	}
+
 	public FileAttachment savePostAttachment(MultipartFile multipartFile) {
 
 		String fileName = getRandomFileName();
-		File file = new File(appConfiguration.getUploadImagePath() + "/" + fileName);
+		String fileType = null;
+		File file = new File(appConfiguration.getAttachmentUploadPath()+ "/" + fileName);
 
 		try {
 			OutputStream outputStream = new FileOutputStream(file);
 			outputStream.write(multipartFile.getBytes());
 			outputStream.close();
+			fileType = detectType(multipartFile.getBytes());
 		} catch (IOException e) {
 
 			e.printStackTrace();
@@ -84,6 +100,7 @@ public class FileService {
 		FileAttachment fileAttachment = new FileAttachment();
 		fileAttachment.setName(fileName);
 		fileAttachment.setDate(new Date());
+		fileAttachment.setFileType(fileType);
 
 		return fileAttachmentRepository.save(fileAttachment);
 
@@ -94,10 +111,11 @@ public class FileService {
 		Date twentyFourHourAgo = new Date(System.currentTimeMillis() - (24 * 60 * 60 * 1000)); // 1 gün önce
 
 		List<FileAttachment> eligibleToDelete = fileAttachmentRepository
-				.findByDateBeforeAndPostIsNull(twentyFourHourAgo); // son 1 günden önceki silinecek dosyaların getirlmesi
+				.findByDateBeforeAndPostIsNull(twentyFourHourAgo); // son 1 günden önceki silinecek dosyaların
+																	// getirlmesi
 
 		for (FileAttachment fileAttachment : eligibleToDelete) {
-			deleteFile(fileAttachment.getName());
+			deleteAttachment(fileAttachment.getName());
 			fileAttachmentRepository.deleteById(fileAttachment.getId());
 
 		}

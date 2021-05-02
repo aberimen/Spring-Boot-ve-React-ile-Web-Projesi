@@ -33,7 +33,12 @@ const PostItem = (props) => {
                     <p className="card-text">
                         {content}
                     </p>
-                    {fileAttachment && <img className="w-50" src={"/images/" + fileAttachment.name} />}
+                    {fileAttachment && (<div>
+                        {fileAttachment.fileType.startsWith('image') && <img className="w-50" src={"/images/attachments/" + fileAttachment.name} />}
+                        {!fileAttachment.fileType.startsWith('image') && <strong> File Attachment</strong>}
+
+                    </div>)}
+
 
                     <p className="card-text"><small className="text-muted">{formattedDate}</small></p>
                 </div>

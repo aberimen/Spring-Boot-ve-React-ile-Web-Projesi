@@ -10,6 +10,18 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "sosyalmedya")
 public class AppConfiguration {
 
-	private String uploadImagePath;
+	private String uploadPath;
+
+	private String profileStorage = "profile";
+
+	private String attachmentStorage = "attachments";
+
+	public String getProfileUploadPath() {
+		return uploadPath + "/" + profileStorage;
+	}
+
+	public String getAttachmentUploadPath() {
+		return uploadPath + "/" + attachmentStorage;
+	}
 
 }

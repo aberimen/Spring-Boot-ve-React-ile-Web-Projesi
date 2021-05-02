@@ -60,7 +60,7 @@ public class UserService {
 			try {
 				String imageFile = fileService.wiriteBase64StringToFile(user.getImage());
 				userInDB.setImage(imageFile);
-				fileService.deleteFile(oldImage);
+				fileService.deleteProfileImage(oldImage);
 				
 			} catch (IOException e) {
 				e.printStackTrace();

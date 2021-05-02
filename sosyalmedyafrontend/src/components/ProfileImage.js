@@ -6,7 +6,7 @@ const ProfileImage = (props) => {
     const { username, image } = user;
     let source = defaultProfileImage;
     if (image) {
-        source = "/images/"+image;
+        source = "/images/profile/"+image;
     }
     return (
         <>
