@@ -18,6 +18,13 @@ const PostSubmit = () => {
     const pendingApiCall = useApiProgress('post', '/api/posts', true);
     const pendingFileUpload = useApiProgress('post', '/api/post-attachments', true);
 
+    useEffect(()=>{
+        if(!focused){
+            setAttachmentId();
+            setNewImage();
+        }
+    },[focused]);
+
     const user = useSelector((store) => {
         return store;
     });
