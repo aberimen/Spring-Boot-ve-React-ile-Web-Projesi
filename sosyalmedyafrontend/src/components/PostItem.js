@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 const PostItem = (props) => {
 
-    const { content, user, timestamp } = props.post;
+    const { content, user, timestamp, fileAttachment } = props.post;
     const { username, firstName, lastName } = user;
 
     const { i18n } = useTranslation();
@@ -33,6 +33,8 @@ const PostItem = (props) => {
                     <p className="card-text">
                         {content}
                     </p>
+                    {fileAttachment && <img className="w-50" src={"/images/" + fileAttachment.name} />}
+
                     <p className="card-text"><small className="text-muted">{formattedDate}</small></p>
                 </div>
             </div>
