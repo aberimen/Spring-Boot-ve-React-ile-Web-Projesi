@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import ProfileImage from './ProfileImage';
 import { format } from 'timeago.js';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
 const PostItem = (props) => {
+
+    const loggedInUser = useSelector(store => store.username);
 
     const { content, user, timestamp, fileAttachment } = props.post;
     const { username, firstName, lastName } = user;
@@ -13,21 +16,23 @@ const PostItem = (props) => {
 
     const formattedDate = format(timestamp, i18n.language);
 
-
+    const ownByUser = username === loggedInUser;
     format
     return (
         <div className="mt-2">
             <div className=" card p-1">
                 <div className="d-flex m-3">
-
                     <ProfileImage className="rounded-circle" style={{ width: "35px", height: "35px" }} user={user} />
-
                     <div className="flex-fill m-auto">
                         <Link to={`/user/${username}`} className="text-dark" >
                             <h6 className="card-title ml-2" >{`${firstName} ${lastName} `}<small className="text-muted">@{username}</small></h6>
                         </Link>
                     </div>
+                    {ownByUser && <button className="btn btn-delete-link">
+                        <span class="material-icons">delete_outline</span>
+                    </button>}
                 </div>
+
                 <div className="card-body">
 
                     <p className="card-text">
@@ -36,7 +41,6 @@ const PostItem = (props) => {
                     {fileAttachment && (<div>
                         {fileAttachment.fileType.startsWith('image') && <img className="w-50" src={"/images/attachments/" + fileAttachment.name} />}
                         {!fileAttachment.fileType.startsWith('image') && <strong> File Attachment</strong>}
-
                     </div>)}
 
 
