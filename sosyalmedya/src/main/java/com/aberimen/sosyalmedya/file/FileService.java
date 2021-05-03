@@ -49,23 +49,23 @@ public class FileService {
 
 	}
 
-	public void deleteFile(String oldImage) {
-		if (oldImage == null) {
+	public void deleteFile(Path path) {
+		if (path == null) {
 			return;
 		}
 		try {
-			Files.deleteIfExists(Path.of(appConfiguration.getUploadPath(), oldImage));
+			Files.deleteIfExists(path);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void deleteAttachment(String file) {
-		deleteFile(appConfiguration.getAttachmentUploadPath() + "/" + file);
+		deleteFile(Path.of(appConfiguration.getAttachmentUploadPath(), file));
 	}
 
 	public void deleteProfileImage(String file) {
-		deleteFile(appConfiguration.getProfileUploadPath() + "/" + file);
+		deleteFile(Path.of(appConfiguration.getProfileUploadPath(), file));
 	}
 
 	public String detectType(String file) {
