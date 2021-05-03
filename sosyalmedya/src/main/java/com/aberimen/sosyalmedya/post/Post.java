@@ -2,6 +2,7 @@ package com.aberimen.sosyalmedya.post;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,7 +35,7 @@ public class Post {
 	@ManyToOne
 	private User user;
 	
-	@OneToOne(mappedBy = "post")
+	@OneToOne(mappedBy = "post",cascade = CascadeType.ALL)
 	private FileAttachment fileAttachment;
 
 }

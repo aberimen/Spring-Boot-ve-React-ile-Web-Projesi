@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.aberimen.sosyalmedya.file.FileAttachment;
 import com.aberimen.sosyalmedya.file.FileAttachmentRepository;
+import com.aberimen.sosyalmedya.file.FileService;
 import com.aberimen.sosyalmedya.post.vm.PostSubmitVM;
 import com.aberimen.sosyalmedya.user.User;
 import com.aberimen.sosyalmedya.user.UserService;
@@ -28,6 +29,9 @@ public class PostService {
 
 	@Autowired
 	private FileAttachmentRepository attachmentRepository;
+
+	@Autowired
+	private FileService fileService;
 
 	public void savePost(PostSubmitVM postSubmitVM, User user) {
 		Post post = new Post();
@@ -87,8 +91,14 @@ public class PostService {
 	}
 
 	public void deletePost(long id) {
-		 postRepository.deleteById(id);
-		
+		Post inDb = postRepository.getOne(id);
+
+		if (inDb.getFileAttachment() != null) {
+			fileService.deleteAttachment(inDb.getFileAttachment().getName());
+		}
+
+		postRepository.deleteById(id);
+
 	}
 
 	Specification<Post> idGreaterThan(long id) {
