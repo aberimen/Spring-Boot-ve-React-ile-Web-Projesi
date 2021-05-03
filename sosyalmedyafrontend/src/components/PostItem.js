@@ -70,6 +70,8 @@ const PostItem = (props) => {
                 </div>
             </div>
             <Modal
+                okBtnText="Delete Post"
+                title="Delete Post"
                 visible={visibleModal}
                 onClickCancel={onClickCancel}
                 onClickOk={onClickDelete}
@@ -78,7 +80,7 @@ const PostItem = (props) => {
                         <strong >Are you sure to delete this post?</strong>
                         <p>{content}</p>
                     </div>}
-                pendingApiCall = {pendingApiCall}
+                pendingApiCall={pendingApiCall}
             />
         </>
     );

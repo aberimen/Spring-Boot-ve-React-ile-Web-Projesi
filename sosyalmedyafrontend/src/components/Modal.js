@@ -3,7 +3,7 @@ import ButtonWithProgress from './ButtonWithProgress';
 
 const Modal = (props) => {
 
-    const { visible, onClickCancel, onClickOk, message, pendingApiCall } = props;
+    const { visible, onClickCancel, onClickOk, message, pendingApiCall, okBtnText, title } = props;
 
     let className = 'modal fade';
     if (visible) {
@@ -15,17 +15,17 @@ const Modal = (props) => {
                 <div className="modal-dialog modal-dialog-centered" >
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title" >Delete Post</h5>
+                            <h5 className="modal-title" >{title}</h5>
                         </div>
                         <div className="modal-body"> {message} </div>
                         <div className="modal-footer">
-                            <button className="btn btn-secondary" onClick={onClickCancel} disabled = {pendingApiCall} >Cancel</button>
-                            <ButtonWithProgress 
-                            text = "Delete Post"
-                            pendingApiCall = {pendingApiCall}
-                            disabled = {pendingApiCall}
-                            className="btn btn-danger"
-                            onClick={onClickOk}
+                            <button className="btn btn-secondary" onClick={onClickCancel} disabled={pendingApiCall} >Cancel</button>
+                            <ButtonWithProgress
+                                text={okBtnText}
+                                pendingApiCall={pendingApiCall}
+                                disabled={pendingApiCall}
+                                className="btn btn-danger"
+                                onClick={onClickOk}
                             />
                         </div>
                     </div>

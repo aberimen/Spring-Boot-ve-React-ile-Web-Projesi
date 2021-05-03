@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 //import { Authentication } from '../shared/AuthenticationContext';
 import { useDispatch, useSelector } from 'react-redux';
 import ProfileImage from './ProfileImage';
 import Input from './Input';
-import { updateUser } from '../api/apiCall';
+import { deleteUser, updateUser } from '../api/apiCall';
 import ButtonWithProgress from './ButtonWithProgress';
 import { useApiProgress } from '../api/ApiProgress';
-import { updateSuccess } from '../redux/authActions';
+import { logoutSuccess, updateSuccess } from '../redux/authActions';
+import Modal from './Modal';
 
 
 const ProfileCard = props => {
@@ -26,8 +27,10 @@ const ProfileCard = props => {
     const [newImage, setNewImage] = useState();
 
     const [validationError, setValidationError] = useState({});
+    const [visibleModal, setVisibleModal] = useState(false);
 
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const { loggedInUsername } = useSelector(store => {
         return { loggedInUsername: store.username };
@@ -57,6 +60,18 @@ const ProfileCard = props => {
 
     }, [inEditMode]); //inEditModun değişimine göre yapılacak işlemler
 
+    const onClickCancel = () => {
+        setVisibleModal(false);
+    };
+
+    const onClickDeleteUser = async () => {
+        await deleteUser(loggedInUsername);
+        setVisibleModal(false);
+        dispatch(logoutSuccess());
+        history.push("/");
+    };
+
+    const pendingApiCallDeleteUser = useApiProgress('delete', `/api/users/${username}`, true);
 
     const onChangeFile = (event) => {
         if (event.target.files.length < 1) {
@@ -115,7 +130,14 @@ const ProfileCard = props => {
                     {!inEditMode &&
                         <>
                             <p className="card-text">{firstName + " " + lastName}</p>
-                            {editable && <button className="btn btn-primary" onClick={() => setInEditMode(true)}>Düzenle</button>}
+                            {editable &&
+                                <div>
+                                    <button className="btn btn-primary mb-2" onClick={() => setInEditMode(true)}>Düzenle</button>
+                                    <button className="btn btn-outline-danger  shadow-none d-flex" onClick={() => setVisibleModal(true)}>
+                                        <i className="material-icons">block</i> <span className="ml-1">Delete Account</span>
+                                    </button>
+                                </div>
+                            }
                         </>
                     }
                     {inEditMode && (
@@ -130,7 +152,18 @@ const ProfileCard = props => {
                 </div>
             </div>
 
-
+            <Modal
+                okBtnText="Delete Account"
+                title="Delete Account"
+                visible={visibleModal}
+                onClickCancel={onClickCancel}
+                onClickOk={onClickDeleteUser}
+                message={
+                    <div>
+                        <strong >Are you sure to delete your account?</strong>
+                    </div>}
+                pendingApiCall={pendingApiCallDeleteUser}
+            />
 
         </div>
     );

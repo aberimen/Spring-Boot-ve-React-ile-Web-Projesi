@@ -66,3 +66,7 @@ export const sendPostAttachment = attachment => {
 export const deletePost = id => {
     return axios.delete('/api/posts/' + id);
 };
+
+export const deleteUser = username => {
+    return axios.delete('/api/users/' + username);
+};

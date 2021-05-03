@@ -70,4 +70,10 @@ public class UserService {
 		return userRepository.save(userInDB);
 	}
 
+	public void deleteUser(String username) {
+		
+		userRepository.deleteByUsername(username);
+		
+	}
+
 }
