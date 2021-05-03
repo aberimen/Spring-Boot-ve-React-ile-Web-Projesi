@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -76,6 +77,7 @@ public class PostController {
 	}
 	
 	@DeleteMapping("/api/posts/{id:[0-9]+}")
+	@PreAuthorize("@postSecurity.isAuthorizedToDelete(#id, principal)")
 	public ResponseEntity<?> deletePost(@PathVariable long id) {
 		postService.deletePost(id);
 		
