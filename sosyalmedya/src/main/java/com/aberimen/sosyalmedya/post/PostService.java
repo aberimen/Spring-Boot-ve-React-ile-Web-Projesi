@@ -35,7 +35,7 @@ public class PostService {
 		post.setTimestamp(new Date());
 		post.setUser(user);
 		postRepository.save(post);
-		
+
 		Optional<FileAttachment> optionalFileAttachment = attachmentRepository.findById(postSubmitVM.getAttachmentId());
 		if (optionalFileAttachment.isPresent()) {
 			FileAttachment fileAttachment = optionalFileAttachment.get();
@@ -84,6 +84,11 @@ public class PostService {
 		}
 		return postRepository.findAll(specification, sort);
 
+	}
+
+	public void deletePost(long id) {
+		 postRepository.deleteById(id);
+		
 	}
 
 	Specification<Post> idGreaterThan(long id) {

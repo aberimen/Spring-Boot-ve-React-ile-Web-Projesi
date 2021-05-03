@@ -92,6 +92,15 @@ const PostFeed = () => {
         }
     }
 
+    const onDeleteSuccess = (id) => { // post silindiğinde, post item tarafından çağıralacak
+        setPostPage((previousPostPage) =>{
+            return {
+                ...previousPostPage,
+                content : previousPostPage.content.filter(c => c.id !== id) // gelen id'ye sahip olan postu silmek için gelen id'ye sahip olmayanları dön
+            }
+        })
+    };
+
     const { content: posts, last } = postPage;
 
     if (posts.length === 0) { // post yoksa
@@ -114,7 +123,7 @@ const PostFeed = () => {
             }
 
             {posts.map((post) => {
-                return <PostItem key={post.id} post={post} />
+                return <PostItem key={post.id} post={post} onDeleteSuccess = {onDeleteSuccess} />
             })}
 
             { !last && <div

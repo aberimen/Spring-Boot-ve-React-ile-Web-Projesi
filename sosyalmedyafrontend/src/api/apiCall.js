@@ -59,6 +59,10 @@ export const getNewPosts = (username, id) => {
     return axios.get(url);
 };
 
-export const sendPostAttachment = attachment =>{
-    return axios.post('/api/post-attachments',attachment);
+export const sendPostAttachment = attachment => {
+    return axios.post('/api/post-attachments', attachment);
+};
+
+export const deletePost = id => {
+    return axios.delete('/api/posts/' + id);
 };

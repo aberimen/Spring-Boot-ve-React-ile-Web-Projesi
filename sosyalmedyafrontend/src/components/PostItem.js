@@ -4,12 +4,13 @@ import ProfileImage from './ProfileImage';
 import { format } from 'timeago.js';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { deletePost } from '../api/apiCall';
 
 const PostItem = (props) => {
 
     const loggedInUser = useSelector(store => store.username);
-
-    const { content, user, timestamp, fileAttachment } = props.post;
+    const { post, onDeleteSuccess } = props;
+    const { content, user, timestamp, fileAttachment, id } = post;
     const { username, firstName, lastName } = user;
 
     const { i18n } = useTranslation();
@@ -17,7 +18,16 @@ const PostItem = (props) => {
     const formattedDate = format(timestamp, i18n.language);
 
     const ownByUser = username === loggedInUser;
-    format
+
+    const onClickDelete = async (id) => {
+        try {
+            await deletePost(id);
+            onDeleteSuccess(id);
+        } catch (err) {
+
+        }
+    };
+
     return (
         <div className="mt-2">
             <div className=" card p-1">
@@ -28,9 +38,10 @@ const PostItem = (props) => {
                             <h6 className="card-title ml-2" >{`${firstName} ${lastName} `}<small className="text-muted">@{username}</small></h6>
                         </Link>
                     </div>
-                    {ownByUser && <button className="btn btn-delete-link">
-                        <span class="material-icons">delete_outline</span>
-                    </button>}
+                    {ownByUser &&
+                        <button className="btn btn-delete-link shadow-none" onClick={() => onClickDelete(id)}>
+                            <span class="material-icons">delete_outline</span>
+                        </button>}
                 </div>
 
                 <div className="card-body">
