@@ -49,19 +49,18 @@ public class UserService {
 		return user;
 	}
 
-	public User updateFullName(String username, UpdatedUserVM user) {
+	public User updateUser(String username, UpdatedUserVM updatedUser) {
 		User userInDB = getByUsername(username);
-		userInDB.setFirstName(user.getFirstName());
-		userInDB.setLastName(user.getLastName());
-		
-
-		if (user.getImage() != null) {
+		userInDB.setFirstName(updatedUser.getFirstName());
+		userInDB.setLastName(updatedUser.getLastName());
+	
+		if (updatedUser.getImage() != null) {
 			String oldImage = userInDB.getImage();
 			try {
-				String imageFile = fileService.wiriteBase64StringToFile(user.getImage());
+				String imageFile = fileService.wiriteBase64StringToFile(updatedUser.getImage());
 				userInDB.setImage(imageFile);
 				fileService.deleteProfileImage(oldImage);
-				
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -71,9 +70,10 @@ public class UserService {
 	}
 
 	public void deleteUser(String username) {
-		
-		userRepository.deleteByUsername(username);
-		
+		User inDb = getByUsername(username);
+		fileService.deleteAllFilesForUser(inDb);
+		userRepository.delete(inDb);
+
 	}
 
 }

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.aberimen.sosyalmedya.configuration.AppConfiguration;
+import com.aberimen.sosyalmedya.user.User;
 
 @Service
 @EnableScheduling
@@ -35,7 +36,7 @@ public class FileService {
 		byte[] decodedString = Base64.getDecoder().decode(image);
 
 		String fileName = getRandomFileName();
-		File file = new File(appConfiguration.getProfileUploadPath()+ "/" + fileName);
+		File file = new File(appConfiguration.getProfileUploadPath() + "/" + fileName);
 
 		OutputStream outputStream = new FileOutputStream(file);
 		outputStream.write(decodedString);
@@ -61,10 +62,16 @@ public class FileService {
 	}
 
 	public void deleteAttachment(String file) {
+		if (file == null) {
+			return;
+		}
 		deleteFile(Path.of(appConfiguration.getAttachmentUploadPath(), file));
 	}
 
 	public void deleteProfileImage(String file) {
+		if (file == null) {
+			return;
+		}
 		deleteFile(Path.of(appConfiguration.getProfileUploadPath(), file));
 	}
 
@@ -85,7 +92,7 @@ public class FileService {
 
 		String fileName = getRandomFileName();
 		String fileType = null;
-		File file = new File(appConfiguration.getAttachmentUploadPath()+ "/" + fileName);
+		File file = new File(appConfiguration.getAttachmentUploadPath() + "/" + fileName);
 
 		try {
 			OutputStream outputStream = new FileOutputStream(file);
@@ -120,5 +127,15 @@ public class FileService {
 
 		}
 
+	}
+
+	public void deleteAllFilesForUser(User inDb) {
+		deleteProfileImage(inDb.getImage());
+
+		List<FileAttachment> attachments = fileAttachmentRepository.findByPostUser(inDb);
+
+		for (FileAttachment fileAttachment : attachments) {
+			deleteAttachment(fileAttachment.getName());
+		}
 	}
 }
