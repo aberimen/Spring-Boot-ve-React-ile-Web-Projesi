@@ -6,7 +6,7 @@ export const signup = user => {
 };
 
 export const login = creds => {
-    return axios.post("/api/auth", {}, { auth: creds });
+    return axios.post("/api/auth", creds);
 }
     ;
 export const changeLanguage = language => {
@@ -17,9 +17,9 @@ export const getUsers = (page = 0, limit = 5) => {
     return axios.get(`/api/users?page=${page}&limit=${limit}`);
 };
 
-export const setAuthorizatonHeader = ({ username, password, isLoggedIn }) => {
+export const setAuthorizatonHeader = ({ token, isLoggedIn }) => {
     if (isLoggedIn) {
-        axios.defaults.headers['Authorization'] = btoa(`${username}:${password}`);
+        axios.defaults.headers['Authorization'] = `Bearer ${token}`;
     }
     else {
         delete axios.defaults.headers['Authorization'];

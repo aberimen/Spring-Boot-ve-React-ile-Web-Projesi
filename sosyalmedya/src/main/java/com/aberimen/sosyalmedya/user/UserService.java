@@ -34,6 +34,7 @@ public class UserService {
 
 	public Page<User> getUsers(Pageable pageable, User user) {
 		// PageRequest pageble =PageRequest.of(page, limit);
+
 		if (user != null) {
 			return userRepository.findByUsernameNot(user.getUsername(), pageable);
 		}
@@ -53,7 +54,7 @@ public class UserService {
 		User userInDB = getByUsername(username);
 		userInDB.setFirstName(updatedUser.getFirstName());
 		userInDB.setLastName(updatedUser.getLastName());
-	
+
 		if (updatedUser.getImage() != null) {
 			String oldImage = userInDB.getImage();
 			try {

@@ -1,19 +1,20 @@
 package com.aberimen.sosyalmedya.auth;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.aberimen.sosyalmedya.shared.CurrentUser;
-import com.aberimen.sosyalmedya.user.User;
-import com.aberimen.sosyalmedya.user.vm.UserVM;
 
 @RestController
 public class AuthController {
+	
+	@Autowired
+	AuthService authService;
 
 	@PostMapping("/api/auth")
-	UserVM auth(@CurrentUser User user) {
+	AuthenticationResponse auth(@RequestBody AuthenticationRequest authenticationRequest) {
 
-		return new UserVM(user);
+		return authService.authenticated(authenticationRequest);
 
 	}
 
