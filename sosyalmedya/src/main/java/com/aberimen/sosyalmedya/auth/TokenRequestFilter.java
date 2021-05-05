@@ -14,15 +14,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.aberimen.sosyalmedya.security.CustomUserDetailsService;
 
 public class TokenRequestFilter extends OncePerRequestFilter {
 
 	@Autowired
 	AuthService authService;
-
-	@Autowired
-	CustomUserDetailsService userDetails;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
