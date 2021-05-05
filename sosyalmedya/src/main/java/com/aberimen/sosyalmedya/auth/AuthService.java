@@ -64,4 +64,9 @@ public class AuthService {
 		return tokenInDB.get().getUser();
 	}
 
+	public void clearToken(String token) {
+		tokenRepository.deleteById(token);
+		
+	}
+
 }

@@ -1,10 +1,17 @@
-import { login, signup } from '../api/apiCall';
+import { login, logout, signup } from '../api/apiCall';
 import * as Actions from './Constants';
 
 export const logoutSuccess = () => {
-    return {
-        type: Actions.LOGOUT_SUCCESS
-    };
+    return async dispatch => {
+        try {
+            await logout();
+        } catch (err) {
+
+        }
+        dispatch({
+            type: Actions.LOGOUT_SUCCESS
+        });
+    }
 };
 
 export const loginSuccess = payload => {
