@@ -1,11 +1,8 @@
 import React from 'react';
 import './ImageAttachment.css'
 
-const ImageAttachment = ({ image, pending }) => {
-    const onClickCloseImage = () => {
-        document.getElementById('image').value = null;
-        document.getElementById('image_attachment').style.display = "none";
-    };
+const ImageAttachment = ({ image, pending , onClickCloseImage}) => {
+  
 
     if (image) {
         return (

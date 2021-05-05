@@ -18,12 +18,12 @@ const PostSubmit = () => {
     const pendingApiCall = useApiProgress('post', '/api/posts', true);
     const pendingFileUpload = useApiProgress('post', '/api/post-attachments', true);
 
-    useEffect(()=>{
-        if(!focused){
+    useEffect(() => {
+        if (!focused) {
             setAttachmentId();
             setNewImage();
         }
-    },[focused]);
+    }, [focused]);
 
     const user = useSelector((store) => {
         return store;
@@ -78,6 +78,11 @@ const PostSubmit = () => {
         setAttachmentId(response.data.id);
     }
 
+    const onClickCloseImage = () => {
+        document.getElementById("imageSelect").value = null;
+        setNewImage();
+    };
+
 
     return (
         <div>
@@ -91,8 +96,8 @@ const PostSubmit = () => {
                         onFocus={() => setFocused(true)} onChange={(event) => onChange(event)} value={post} />
                     <div className="invalid-feedback"> {validationError.content}</div>
 
-                    <Input id="image" type="file" onChange={onChangeFile} />
-                    <ImageAttachment image={newImage} pending={pendingFileUpload} />
+                    <Input id="imageSelect" type="file" onChange={onChangeFile} />
+                    <ImageAttachment image={newImage} pending={pendingFileUpload} onClickCloseImage={onClickCloseImage} />
 
 
                     <ButtonWithProgress

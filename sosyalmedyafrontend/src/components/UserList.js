@@ -44,7 +44,7 @@ const UserList = props => {
         return (
             <>
                 <h5 className="card-title">Kullanıcılar</h5>
-                <div className="list-group list-group-flush p-3">
+                <div className="list-group list-group-flush">
                     {users.map((user) => {
                         return <UserListItem user={user} key={user.username} />
                     })}
@@ -64,6 +64,7 @@ const UserList = props => {
                 </div>
             </div>
             { loadFailure && (<div class="alert alert-danger mt-3" role="alert"> Kullanıcılar Yüklenemedi...</div>)}
+
             <div className="mt-3">
                 <ul className="pagination justify-content-center">
                     <li className={`page-item ${first == true && "disabled"}`}>

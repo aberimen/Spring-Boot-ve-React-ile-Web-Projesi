@@ -9,18 +9,17 @@ const UserListItem = (props) => {
         <>
 
             <div className="list-group-item">
-                <div className="row">
-                    <div className="col-1">
-                        <ProfileImage className="rounded-circle bg-light" user = {user} style={{ width: "50px", height: "50px" }} />
+                <div className="d-flex align-items-center">
+                    <div className="mr-2">
+                        <ProfileImage className="rounded-circle bg-light" user={user} style={{ width: "50px", height: "50px" }} />
                     </div>
-                    <div className="col-11">
+                    <div>
                         <div className="font-weight-bold">
                             <Link to={`user/${username}`}>  {username}  </Link>
                         </div>
                         <div style={{ fontWeight: "400", color: "#777" }}>
                             {`${firstName}  ${lastName}`}
                         </div>
-
                     </div>
                 </div>
             </div>

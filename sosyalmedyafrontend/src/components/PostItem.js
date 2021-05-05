@@ -50,7 +50,7 @@ const PostItem = (props) => {
                         </div>
                         {ownByUser &&
                             <button className="btn btn-delete-link shadow-none" onClick={() => setVisibleModal(true)}>
-                                <span class="material-icons">delete_outline</span>
+                                <span className="material-icons">delete_outline</span>
                             </button>}
                     </div>
 
