@@ -17,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.aberimen.sosyalmedya.auth.Token;
 import com.aberimen.sosyalmedya.post.Post;
 
 import lombok.Data;
@@ -49,8 +50,11 @@ public class User implements UserDetails {
 
 	private String image;
 
-	@OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	private List<Post> posts;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	private List<Token> tokens;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

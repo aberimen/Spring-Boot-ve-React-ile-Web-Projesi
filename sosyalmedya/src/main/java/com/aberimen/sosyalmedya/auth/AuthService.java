@@ -1,28 +1,30 @@
 package com.aberimen.sosyalmedya.auth;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aberimen.sosyalmedya.user.User;
 import com.aberimen.sosyalmedya.user.UserRepository;
 import com.aberimen.sosyalmedya.user.vm.UserVM;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
 public class AuthService {
 
 	UserRepository userRepository;
 	PasswordEncoder passwordEncoder;
+	TokenRepository tokenRepository;
 
-	public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+			TokenRepository tokenRepository) {
 		super();
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.tokenRepository = tokenRepository;
 	}
 
 	public AuthenticationResponse authenticated(AuthenticationRequest authenticationRequest) {
@@ -36,28 +38,30 @@ public class AuthService {
 		if (!maches) {
 			throw new UnauthorizedException();
 		}
-		String token = Jwts.builder().setSubject(inDb.getUsername()).signWith(SignatureAlgorithm.HS512, "secret_key")
-				.compact();
 
-		return new AuthenticationResponse(token, new UserVM(inDb));
+		Token token = new Token();
+		token.setToken(generateToken());
+		token.setUser(inDb);
+		tokenRepository.save(token);
+
+		return new AuthenticationResponse(token.getToken(), new UserVM(inDb));
 
 	}
 
-	public UserDetails getUserDetails(String jwt) {
-		
-		JwtParser parser = Jwts.parser().setSigningKey("secret_key");
-		
-		try {
-			Claims claims = parser.parseClaimsJws(jwt).getBody();
-			String username = claims.getSubject();
-			User user = userRepository.findByUsername(username);
-			return user;
-			
-		}catch(Exception e) {
-			e.printStackTrace();
+	public String generateToken() {
+		return UUID.randomUUID().toString().replaceAll("-", "");
+	}
+
+	@Transactional
+	public UserDetails getUserDetails(String token) {
+
+		Optional<Token> tokenInDB = tokenRepository.findById(token);
+		if (!tokenInDB.isPresent()) {
+
+			return null;
 		}
-		
-		return null;
+
+		return tokenInDB.get().getUser();
 	}
 
 }

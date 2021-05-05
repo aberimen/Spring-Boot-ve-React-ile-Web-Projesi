@@ -12,7 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.aberimen.sosyalmedya.auth.JwtRequestFilter;
+import com.aberimen.sosyalmedya.auth.TokenRequestFilter;
+
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -43,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 				.authorizeRequests().anyRequest().permitAll();
 		
-		http.addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(tokenRequestFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Bean
@@ -52,8 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	
 	@Bean
-	JwtRequestFilter jwtRequestFilter() {
-		return new JwtRequestFilter();
+	TokenRequestFilter tokenRequestFilter() {
+		return new TokenRequestFilter();
 	}
 
 }

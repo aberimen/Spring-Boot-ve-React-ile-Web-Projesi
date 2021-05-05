@@ -16,7 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.aberimen.sosyalmedya.security.CustomUserDetailsService;
 
-public class JwtRequestFilter extends OncePerRequestFilter {
+public class TokenRequestFilter extends OncePerRequestFilter {
 
 	@Autowired
 	AuthService authService;
@@ -30,12 +30,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 		final String authorizationHeader = request.getHeader("Authorization");
 
-		String jwt = null;
+		String token = null;
 		UserDetails user = null;
 
 		if (authorizationHeader != null) {
-			jwt = authorizationHeader.substring(7);
-			user = authService.getUserDetails(jwt);
+			token = authorizationHeader.substring(7);
+			user = authService.getUserDetails(token);
 		}
 
 		if (user != null) {
