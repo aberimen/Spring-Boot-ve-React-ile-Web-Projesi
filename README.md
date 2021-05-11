@@ -3,17 +3,17 @@ Udemy kursu ile paralel geliştirmiş olduğum Spring Boot ve ReactJs ile temel 
 
 #### Projede Kullanılan Kütüphaneler & Teknolojiler 
 
-+ Spring Boot
-  + Spring Security
+* Spring Boot
+  * Spring Security
   * Validations
-* Lombok
-* Spring Data JPA
-* Token Authentication
+  * Lombok
+  * Spring Data JPA
+  * Token Authentication
 
 * ReactJS
-* Redux
-* Axios
-* Bootstrap
-* Timeago
-* i18next
+  * Redux
+  * Axios
+  * Bootstrap
+  * Timeago
+  * i18next
 
